@@ -151,9 +151,12 @@ You can install what you see necessary. These are all optional.
 
 - Install OpenSSH `sudo apt install openssh-server`
 - Check SSH server status: `sudo service ssh status` or `sudo systemctl status ssh`, see if it appears active/running. (Execute `sudo service ssh restart` if it's not active).
-- Let's change some configurations by editing (use nano or vim) its configuration file: `sudo nano /etc/ssh/sshd_config`.
-	- The SSH listening port should be `4242`. Uncomment and change port line from`#Port 22` to `Port 4242`.
-	- It should not be possible to connect via SSH as root, so we must change the line `#PermitRootLogin...` to `PermitRootLogin no`
+- Let's change some configurations by editing (use nano or vim) its configuration files
+	- Edit server: `sudo nano /etc/ssh/sshd_config`.
+		- The SSH listening port should be `4242`. Uncomment and change port line from `#Port 22` to `Port 4242`.
+		- It should not be possible to connect via SSH as root, so we must change the line `#PermitRootLogin...` to `PermitRootLogin no`
+	- Edit client: `sudo nano /etc/ssh/ssh_config`.
+ 		- The SSH port the connection goes out from should be `4242`: `#Port 22` to `Port 4242`.
 - Restart the service `sudo service ssh restart` and check status `sudo service ssh status`. We must see that the server is active and listening through port 4242.
 
 #### 🟪 UFW Firewall configuration
