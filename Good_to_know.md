@@ -25,6 +25,18 @@ $ sudo reboot
 
 ## Good to know - but maybe too much
 
+### 🟨 SSH config files
+
+SSH config files: `/etc/ssh/ssh_config` vs `/etc/ssh/sshd_config`
+
+- `ssh_config` is for configuring the behavior of the OpenSSH client.
+- `sshd_config` is for configuring the behavior of the OpenSSH server (`sshd`).
+
+OpenSSH client and server
+- OpenSSH client: it is the program you use to connect from your machine to other machines using SSH.
+- OpenSSH daemon (`sshd`): it is the server-side component of OpenSSH, that handles incoming SSH connections.
+
+
 ### 🟨 Init systems
 `sudo service ssh status` vs `sudo systemctl status ssh`
 
@@ -46,3 +58,5 @@ It's worth noting that both commands essentially provide information about the s
 ps -p 1 -o comm=
 ```
 If the output is `systemd,` you should use `sudo systemctl status ssh`; otherwise, you might use `sudo service ssh status.`
+
+
