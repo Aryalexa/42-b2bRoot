@@ -17,7 +17,7 @@ Target: configure your first server using a VM
        - [`sudo` installation](https://github.com/Aryalexa/42-b2bRoot/blob/main/4-Vm_setup.md#-sudo-installation)
        - [users and groups management](https://github.com/Aryalexa/42-b2bRoot/blob/main/4-Vm_setup.md#-users-and-groups-management)
        - [`sudo` configuration](https://github.com/Aryalexa/42-b2bRoot/blob/main/4-Vm_setup.md#-sudo-configuration)
-       - Tools installation
+       - [Tools installation](https://github.com/Aryalexa/42-b2bRoot/blob/main/4-Vm_setup.md#-tools-installation)
        - [SSH configuration](https://github.com/Aryalexa/42-b2bRoot/blob/main/4-Vm_setup.md#-ssh-configuration)
        - [UFW Firewall configuration](https://github.com/Aryalexa/42-b2bRoot/blob/main/4-Vm_setup.md#-ufw-firewall-configuration)
        - [Test SSH communication with your VM](https://github.com/Aryalexa/42-b2bRoot/blob/main/4-Vm_setup.md#-test-ssh-communication-with-your-vm)
