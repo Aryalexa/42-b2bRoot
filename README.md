@@ -8,7 +8,7 @@ Target: configure your first server using a VM
 - [Subject](https://github.com/Aryalexa/42-b2bRoot/blob/main/Subject.md#b2br-subject)
   - [Requirements](https://github.com/Aryalexa/42-b2bRoot/blob/main/Subject.md#requirements)
   - [Evaluation](https://github.com/Aryalexa/42-b2bRoot/blob/main/Subject.md#evaluation)
-- COMMANDS
+- [COMMANDS](https://github.com/Aryalexa/42-b2bRoot/blob/main/Commands.md#commands)
 - The implementation
     1. [Create new VM](https://github.com/Aryalexa/42-b2bRoot/blob/main/1-Create_vm.md#1-create-new-vm)
     2. [Install Debian](https://github.com/Aryalexa/42-b2bRoot/blob/main/2-Install_Debian.md#2-install-debian)🟡
