@@ -5,9 +5,9 @@ The 42 project Born2beroot explores the fundamentals of system administration by
 Target: configure your first server using a VM
 
 ## Table of contents
-- Subject
-  - Requirements
-  - Evaluation
+- [Subject](https://github.com/Aryalexa/42-b2bRoot/blob/main/Subject.md#b2br-subject)
+  - [Requirements](https://github.com/Aryalexa/42-b2bRoot/blob/main/Subject.md#requirements)
+  - [Evaluation](https://github.com/Aryalexa/42-b2bRoot/blob/main/Subject.md#evaluation)
 - COMMANDS
 - The project
     1. Create new VM
