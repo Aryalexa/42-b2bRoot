@@ -156,7 +156,7 @@ You can install what you see necessary. These are all optional.
 	- It should not be possible to connect via SSH as root, so we must change the line `#PermitRootLogin...` to `PermitRootLogin no`
 - Restart the service `sudo service ssh restart` and check status `sudo service ssh status`. We must see that the server is active and listening through port 4242.
 
-#### 🟪 📝UFW Firewall configuration
+#### 🟪 UFW Firewall configuration
 > 🌳
 > UFW (Uncomplicated Firewall)
 
@@ -164,7 +164,7 @@ You can install what you see necessary. These are all optional.
 ...
 
 
-#### Test SSH communication with your VM
+#### 🟪 Test SSH communication with your VM
 
 Prepare the VM. We need to forward the host port 4242 to the guest port 4242. 
 - In VirtualBox:
@@ -199,5 +199,5 @@ $ ssh <username>@localhost -p <target_port>
 $ ssh <username>@127.0.0.1 -p <target_port>
 ```
 
-#### 🟪 📝Password policy
+#### 🟪 Password policy
 ...
