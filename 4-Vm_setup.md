@@ -1,6 +1,6 @@
 ### 4. Set up
 
-We're going to set up some tools, sevices and configurations.
+We're going to set up some tools, sevices and configurations in our Debian VM.
 
 What we want:
 - A SSH service
