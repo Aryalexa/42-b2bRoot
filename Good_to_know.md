@@ -59,4 +59,44 @@ ps -p 1 -o comm=
 ```
 If the output is `systemd,` you should use `sudo systemctl status ssh`; otherwise, you might use `sudo service ssh status.`
 
+### 🟨 The ISO model
+The ISO model is a conceptual framwork that stardardizes the functions of a system into 7 abstraction layers.
+These layers  help facilitate communication between different systems by breaking down the communication process into manageable and modular components.Each layer has a specific set of functions and interacts with adjacent layers. 
+The OSI model is not a practical implementation but a theoretical framework for understanding network protocols and communication.
 
+These are the layers, from lowest (physical) to highest (application):
+1. Physical Layer (L1)
+2. Data Link Layer (L2)
+3. Network Layer (L3)
+4. Transport Layer (L4)
+5. Session Layer (L5)
+6. Presentation Layer (L6)
+7. Applicacion Layer (L7)
+
+**SSH communication example**
+
+SSH operates primarily at the application layer (Layer 7) but interacts with lower layers for encryption, transport, and network functionality. 
+- An SSH session involves interaction primarily with the application, presentation, and session layers for secure communication. (L7-5)
+- The transport layer ensures reliable communication, while the network layer handles routing between different IP addresses. (L4-3)
+- The lower layers (data link and physical) are managed by the underlying network infrastructure and are less directly influenced by the SSH protocol. (L2-1)
+
+A little more in detail
+- When a user initiates an SSH connection, they typically use an SSH client application (e.g., OpenSSH on the command line). The client initiates a request to establish a secure connection to an SSH server. SSH operates as an application layer (L7) protocol.
+- SSH includes its own presentation layer (L6) for encoding and decoding data. It manages the encryption, compression, and integrity checking of the data being exchanged between the client and server. This layer ensures that the data is presented in a secure and readable format.
+- The session layer (L5) manages the establishment, maintenance, and termination of the SSH session. It handles the negotiation of encryption algorithms, authentication methods, and other parameters that define the characteristics of the session.
+- The transport layer (L4) is crucial for SSH. It is responsible for secure and reliable end-to-end communication. SSH can operate over both TCP (Transmission Control Protocol) and, to a lesser extent, UDP (User Datagram Protocol). Most SSH implementations use TCP as the underlying transport protocol.
+- The network layer (L3) is where IP addressing and routing come into play. In the context of SSH, it involves the routing of data packets between the client and server across different networks. SSH relies on the Internet Protocol (IP) for addressing and routing.
+- The data link layer (L2) handles framing and addressing within the local network segment (or LAN). In the case of SSH over the internet, this layer is less directly involved, as the data link layer functionalities are typically handled by routers and switches.
+- The physical layer (L1) deals with the actual transmission of bits over the physical medium, such as cables or wireless signals. SSH is agnostic to the physical layer, as it relies on the underlying network infrastructure for physical connectivity.
+
+And a firewall in this communication?
+
+A firewall operates primarily at the network layer and above in the OSI model (L3-7).
+- L3: They can examine the IP addresses and route information of packets, to filter and control which devices are allowed to communicate which each other.
+- L4: They can inspect traffic and make decisions based on protocols and port numbers.
+- L7: They can include application-layer filtering capabilities. They can analyze and control traffic based on specific applications or protocols, providing a more granular level of control.
+
+In the context of an SSH session... a firewall inspects traffic at multiple layers:
+- L3: Filtering based on IP addresses.
+- L4: Filtering based on port numbers.
+- L7: Deep packet inspection, looking into the content of the packets to identify specific applications or protocols. This allows for more sophisticated filtering based on the actual content of the communication.
