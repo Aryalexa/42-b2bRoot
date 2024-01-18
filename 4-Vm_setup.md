@@ -268,3 +268,5 @@ so the passwords..
 	- must contain at least 7 new characters not included in the old password (`difok=7`). This rule does not apply for the root password)
  	- The policy applies to root (`enforce_for_root`)
   	- three retries before error (`retry=3`)
+
+Use `sudo passwd <username>` to change your password and make it comply with the new policy.
