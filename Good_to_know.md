@@ -19,10 +19,6 @@ $ sudo reboot
 ```
 
 
-
-- 
-
-
 ## Good to know - but maybe too much
 
 ### 🟨 SSH config files
@@ -36,12 +32,38 @@ OpenSSH client and server
 - OpenSSH client: it is the program you use to connect from your machine to other machines using SSH.
 - OpenSSH daemon (`sshd`): it is the server-side component of OpenSSH, that handles incoming SSH connections.
 
+### 🟨 Network Addresses
+1. IP Address:
+An IP (Internet Protocol) address is a numerical label assigned to each device participating in a computer network. It serves two main functions:
+Identifying the host or network interface.
+Providing the location of the host in the network.
+2. Subnet Mask:
+The subnet mask helps in dividing an IP address into network and host portions. It is often expressed in dotted-decimal format like an IP address (e.g., 255.255.255.0). The subnet mask designates the network and host portions of an IP address.
+3. Network Address:
+The network address represents the beginning of a specific network. It is used to identify the network itself. For example, in the network 192.168.1.0 with a subnet mask of 255.255.255.0, the network address is 192.168.1.0.
+4. Broadcast Address:
+The broadcast address is a special address that is used to send a message to all devices on a specific network. It is the last address in the range for a given network. For example, in the network 192.168.1.0 with a subnet mask of 255.255.255.0, the broadcast address is 192.168.1.255.
+5. Local Address (Loopback Address):
+The local address, often referred to as the loopback address, is used to test network connectivity on the local machine. It is represented by the IP address 127.0.0.1.
+6. Virtual Machine (VM) Address:
+A virtual machine running on your computer, often in a virtualized environment like VirtualBox, VMware, or others, will typically have its own IP address assigned. This IP address is usually within the range of the host machine's local network.
+
+Example:
+If your host machine has an IP address of 192.168.1.10 with a subnet mask of 255.255.255.0, your VM might be assigned an IP address like 192.168.1.11. The network address for this example is 192.168.1.0, and the broadcast address is 192.168.1.255.
+
+Your ip iddress: 
+- MacOS: `ipconfig getifaddr en0`
+- Linux: `ip addr`
+
+Scan network
+- Linux: `sudo arp-scan --localnet`
+- MAcOS: `arp -a`, this command displays the ARP table, which includes a mapping of IP addresses to MAC addresses. It can give you a list of devices that your Mac has recently communicated with.
 
 ### 🟨 Init systems
 `sudo service ssh status` vs `sudo systemctl status ssh`
 
 The commands achieve similar outcomes, but they are associated with different init systems commonly used in Linux.
-A init system is a system and service manager for Linux, which is designed to manage the system and its processes, including services, daemons, and other system-related tasks.
+A init system is a **system and service manager for Linux**, which is designed to manage the system and its processes, including services, daemons, and other system-related tasks.
 
 `sudo service ssh status`:
 - This command is typically used in systems that use the traditional SysV init system (init.d scripts) for managing services.
