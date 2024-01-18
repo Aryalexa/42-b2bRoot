@@ -236,4 +236,35 @@ $ ssh <username>@127.0.0.1 -p <target_port>
 ```
 
 #### 🟪 Password policy
-...
+Two steps for complying with the subject
+1. Change password and accounts aging settings
+We do this by editing the `/etc/login.defs` file.
+For `password aging controls`, let's modify the file so all new users get this configuration. 
+- `PASS_MAX_DAYS 30`: passwords expire after 30 days
+- `PASS_MIN_DAYS 2`: the minimum number of days allowed before changing the password is 2
+- `PASS_WARN_AGE 7`: the user is notified with a message 7 days before the password expires
+
+Lets change this for current users too. You can use `chage -l <username>` to see current settings and the following to update them.
+```
+$ sudo chage -M 30 <username/root>
+$ sudo chage -m 2 <username/root>
+$ sudo chage -W 7 <username/root>
+```
+2. Change passwords requirements
+Install Password Quality Checking Library and edit its settings.
+```
+$ sudo apt install libpam-pwquality
+$ sudo nano /etc/pam.d/common-password
+```
+Change the line `password  requisite     pam_pwquality.so` to 
+```
+password  requisite     pam_pwquality.so  retry=3 minlen=10 ucredit=-1 lcredit=-1 dcredit=-1 maxrepeat=3 reject_username difok=7 enforce_for_root
+```
+so the passwords..
+	- consists of minimum 10 characters (`minlen=10`)
+	- must contain a capital letter and a number (`ucredit=-1 lcredit=-1 dcredit=-1` for uppercase, lowercase and digits, `-` for minimum and `+` for maximum)
+	- cannot have the same character consecutively repeated more than 3 times (`maxrepeat=3`)
+	- cannot contain the user name (`reject_username`)
+	- must contain at least 7 new characters not included in the old password (`difok=7`). This rule does not apply for the root password)
+ 	- The policy applies to root (`enforce_for_root`)
+  	- three retries before error (`retry=3`)
