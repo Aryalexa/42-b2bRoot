@@ -161,34 +161,67 @@ You can install what you see necessary. These are all optional.
 
 #### 🟪 UFW Firewall configuration
 > 🌳
-> UFW (Uncomplicated Firewall)
+> Firewall
+> - It is a network security software (or device) that monitors, filters and controls incoming and outgoing network traffic.
+> - It works based on predetermined security rules.
+> - It stablishes a barrier between a secure internal network and a potentially untrusted external networks.
+> - They form the first line of defense against various cyber threats.
+>
+> *UFW (Uncomplicated Firewall)*
+> It's a user-friendly front-end for managing iptables.
+> - iptables is a traditional powerful and flexible firewall tool in Linux.
+> - It simplifies the process of configuring and managing a firewall on Linux.
+> - UFW is primarily managed through the command line.
+> - UFW follows the principle of "default deny": incoming traffic is denied unless explicitly allowed by configured rules.
+> - UFW includes application profiles that allow users to enable predefined sets of rules for common services and applications (like OpenSSH, Apache, or Nginx).
 
+Let's install UFW and enable it.
+```shell
+$ sudo apt install ufw
+$ sudo ufw enable
+```
+Check UFW status with `sudo ufw status`, `sudo ufw status verbose` or `sudo ufw status numbered` (where the rules appear numbered for reference).
 
-...
+Now lets add/change some rules: `sudo ufw allow 4242` in order to allow 4242 for SSH to work.
 
+> 🌳
+> Some useful UFW commands
+> - Allow/deny ports:
+>   ```shell
+>   $ sudo ufw allow <port>
+>   $ sudo ufw deny <port>
+>   ```
+>   - Remove port rules:
+>   ```shell
+>   $ sudo ufw delete allow <port>
+>   $ sudo ufw delete deny <port>
+>   $ sudo ufw delete <rule index number>
+>   ```
+>   Careful with the numbered method, the index numbers change after a deletion, check between deletes to get the correct port index number!
 
 #### 🟪 Test SSH communication with your VM
 
-Prepare the VM. We need to forward the host port 4242 to the guest port 4242. 
+We have to make the VM accesible from the network. We do this by redirecting ports using port forwarding in our virtualization software (Virtual Box).
+Let's forward the host port 4242 to the guest port 4242, so that connections to port 4242 on the host will be directed to port 4242 on the virtual machine.
 - In VirtualBox:
 	- go to VM >> `Settings` >> `Network` >> `Adapter 1` >> `Advanced` >> `Port Forwarding`.
 	- add a rule: TCP protocol, host port 4242 and guest port 4242.
 - Restart SSH service after this change `sudo service ssh restart` or `sudo systemctl restart ssh`.
-- check if ssh active and the port (for both the host and the VM(guest))
-	- `sudo systemctl status ssh` or `sudo service ssh status`
-	- `sudo ss -tlnp | grep sshd` or `cat /etc/ssh/sshd_config`
+- Check if SSH is active and which port is listening (for both the host and the VM(guest))
+	- Linux: `sudo systemctl status ssh` or `sudo service ssh status` (ssh status)
+	- Linux: `sudo ss -tlnp | grep sshd` or `cat /etc/ssh/sshd_config` (ssh server port)
 
-See `man ssh` for more details on ssh command. Option `-p`: Port to connect to on the remote host.🔴#todo
+To connect, use the `ssh` command (option `-p`: Port to connect to on the remote host).
 
 Let's connect from host to VM (guest).
-- In the host terminal (physical), connect like this:
+- In the host terminal (your computer), connect like this and introduce your created password.
 ```shell
 $ ssh <username>@vm_hostname -p <vm_port>
 ```
 
 - To quit the ssh connection, type `exit`.
 
-Let's connect from VM (guest) to host.
+Let's connect from VM (guest) to host. This will be possible if SSH is enable in the host.
 - In a terminal within the VM, connect like this:
 ```shell
 $ ssh <username>@host_ip_address -p <host_port>
