@@ -1,10 +1,12 @@
 # b2bR Subject
 
 ## **Requirements**  
-  
+
+Create a VM with the following requirements.
+- Virtualization software: VirtualBox (or UTM)
 - SO: last stable version of *Debian*  
 - Partitions: at least 2 *encrypted partitions* created with LVM  
-- Main service: The *SSH* service should run only on port `4242`. For security reasons, it should not be possible to connect via SSH as root.  
+- Main service: The *SSH* service. It should run only on port `4242`. For security reasons, it should not be possible to connect via SSH as root.  
 - Configure you SO with the *firewall* UFW, leaving only port `4242` open. (The FW should be active when executing the VM)  
 - `hostname` of your VM: `{42login}42`.  
 - Use a strong *password policy*  
