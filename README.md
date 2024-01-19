@@ -19,10 +19,10 @@ Target: configure your first server using a VM
        - [`sudo` configuration](https://github.com/Aryalexa/42-b2bRoot/blob/main/4-Vm_setup.md#-sudo-configuration)
        - [Tools installation](https://github.com/Aryalexa/42-b2bRoot/blob/main/4-Vm_setup.md#-tools-installation)
        - [SSH configuration](https://github.com/Aryalexa/42-b2bRoot/blob/main/4-Vm_setup.md#-ssh-configuration)
-       - [UFW Firewall configuration](https://github.com/Aryalexa/42-b2bRoot/blob/main/4-Vm_setup.md#-ufw-firewall-configuration)🔴
+       - [UFW Firewall configuration](https://github.com/Aryalexa/42-b2bRoot/blob/main/4-Vm_setup.md#-ufw-firewall-configuration)
        - [Test SSH communication with your VM](https://github.com/Aryalexa/42-b2bRoot/blob/main/4-Vm_setup.md#-test-ssh-communication-with-your-vm)
-       - [Password policy](https://github.com/Aryalexa/42-b2bRoot/blob/main/4-Vm_setup.md#-password-policy)🔴
-    5. The script🔴
+       - [Password policy](https://github.com/Aryalexa/42-b2bRoot/blob/main/4-Vm_setup.md#-password-policy)
+    5. [The script](https://github.com/Aryalexa/42-b2bRoot/blob/main/5-Script.md#5-script)🟡
     6. Bonus🔴
     7. [Signature](https://github.com/Aryalexa/42-b2bRoot/blob/main/7-Signature.md#7-signature)
 - [Good to know - prepare for evaluation](https://github.com/Aryalexa/42-b2bRoot/blob/main/Good_to_know.md#good-to-know---prepare-for-evaluation)🟡
