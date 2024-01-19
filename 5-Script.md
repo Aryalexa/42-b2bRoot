@@ -10,15 +10,16 @@ script = sequence of commands in a file to be executed in sequencial order
 5. The script
 
 #### 🟦 1. Create the file
-Create the file `monitoring.sh`.
+
 > Where to save the script?
 > - If the scripts are used by multiple users or if they are system-wide scripts, you might consider placing them in a directory such as `/usr/local/bin` or `/opt/scripts`.
 > - If a user owns the `cron` job, storing the scripts in the home directory of the user is a common practice. For example, `/home/user1` or `/home/user1/scripts`
 >
 > Ensure that the directories you choose are included in the `PATH` environment variable or provide the full path to the script when configuring the `cron` job.
 
-Give the script execution permissions, i.e.:
+Create the file `monitoring.sh` and give it execution permissions.
 ```
+$ cd /usr/local/bin
 $ touch monitoring.sh
 $ chmod 755 monitoring.sh
 ```
@@ -78,6 +79,75 @@ Using both you can filter specific words:
 - `wc *.c | grep total | awk '{print $1}'` prints the number of lines for all .c files in the current directory.
 
 #### 🟦 3. Content
+We want our script to show something lke this:
+
+![script message](script_output.png)
+
+The idea is gathering all the information in variables and then printing them in the order that is expected.
+For the printing we'll use `wall`, it not only prints, it broadcasts.
+> 🌳
+> `wall` command
+> - It is used to send a message to all users who are currently logged in. A broadcast!
+> - The word "wall" stands for "write all."
+> ```
+> wall "Attention to all users"
+> echo "This is a broadcast message" | wall
+> script_with_echo | wall
+> ```
+Something like this:
+```
+INFO1=$(command_for_arch)
+INFO2=$(command_for_arch)
+wall "
+      Info1    : $INFO1
+      Info2    : $INFO2"
+```
+
+So let's gather all the information to show:
+
+##### 🔸 1. Your OS architecture and its kernel version
+The command `uname -a` gives us:
+- System Name: The name of the operating system.
+- Node Name: The network node (hostname) of the machine on the network.
+- Kernel Release: The release level of the operating system kernel.
+- Kernel Version: The version of the operating system kernel.
+- Machine Hardware: The hardware type of the machine.
+
+##### 🔸 2. Number of physical cores
+##### 🔸 3. Number of virtual cores
+For physical and virtual cores we can use the file `/proc/cpuinfo`. See the lines with "physical id" and "processor".
+##### 🔸 4. Current RAM memory available in your server and its usage as a percentage
+Use `free` to show RAM data. See options `--mega`, `-h`, `-k`. 
+##### 🔸 5. Current memory available in your server and its usage as a percentage (disk)
+Use `df` to show disk data. See options `--total`, `-h`, `-k`. 
+##### 🔸 6. Current percentage of core/cpu load
+```
+CPU_LOAD=$(top -bn1 | grep '^%Cpu' | xargs | awk '{printf("%.1f%%"), $2 + $4}')
+```
+or
+```
+cpul=$(vmstat 1 2 | tail -1 | awk '{printf $15}')
+cpu_op=$(expr 100 - $cpul)
+cpu_fin=$(printf "%.1f" $cpu_op)
+```
+##### 🔸 7. Date and time of last boot
+See `who -b`.
+##### 🔸 8. Whether LVM is active or not
+We want to print "yes" or "no" based on the LVM status.
+See `lsblk`.
+##### 🔸 9. Number of active connections
+Let's count TCP connections.
+See `ss -ta` or the file `/proc/net/sockstat`
+##### 🔸 10. Number of users in the server
+See `users` or `who`
+##### 🔸 11. IPv4 address and MAC (Media Access Control) of your server
+For IP address: see `hostname -I`.
+
+For MAC address: see `ip link `.
+##### 🔸 12. Number of commands executed as sudo
+Remember the log?
+`SUDO_LOG=$(grep COMMAND /var/log/sudo/sudo.log | wc -l)`
+
 #### 🟦 4. Make it work every 10 mins in all terminals
 1. All terminals
 The `wall` command allows us to broadcast a message to all users in all terminals. This can be incorporated into the `monitoring.sh` script or added later in `cron`.
