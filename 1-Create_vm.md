@@ -50,7 +50,7 @@ Create a virtual **Hard disk** *now*.
 - type: VDI (Virtual Disk Image)
 - storage: select `dynamically allocated` so the allocation is done as is used until reaching the limit
 - location: give the vdi a location `42login/vmdirname/Born2beroot/Born2beroot.vdi`
-- size: `12GB` as recommended or `30GB` if we are doing the ✨bonus✨. 🔴#todo: mcombeau says 10-13 for both mandatory and bonus.
+- size: `12GB` as recommended or `30GB` if we are doing the ✨bonus✨ (the manual partitions need 30GB).
 ```
 🔹General
 name: Born2beroot
