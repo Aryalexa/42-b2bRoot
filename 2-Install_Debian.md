@@ -245,13 +245,13 @@ Once the seven LVs are configured, select `Finish partitioning and write changes
 
 #### 🟩 Configure the package manager
 - Configure the **package manager (apt)**. Now we are asked if we want to add more media, apart from the Debian we have downloaded and selected, to be used by the package manager. We say no.
-- Now the package manager needs to find a mirror* The mirror is use to keep the Debian system updated, secure, and to install additional software. We select our *country*, and then the archive *mirror* `deb.debian.org`.
+- Now the package manager needs to find a mirror. The mirror is use to keep the Debian system updated, secure, and to install additional software. We select our *country*, and then the archive *mirror* `deb.debian.org`.
 - As the system is going to connect to the mirror, the installer ask us if we need an *HTTP proxy*, let's just leave this blank and continue.
 - Do we want to participate in Debian *stats*? No, this is just a one time project.
 - Now we are asked which *additional software* we want the package manager to install. We need none, so deselect everything and continue.
 
 #### 🟩 Install Boot loader
-- Right after, the installer recommend us to install *GRUB boot loader* as we are installing an OS, and to install it on the primary partition (`/boot`). We say yes and proceed to install it in the bootable device we were recommended: the non-manual option (`/dev/sda`).
+- Right after, the installer recommend us to install *GRUB boot loader* as we are installing an OS, and to install it on the primary partition (`/boot`). We say yes and proceed to install it in the bootable device we were recommended: `/dev/sda`.
 > 🌳 
 > 
 > The GRUB (Grand Unified Bootloader) is a boot loader from the GNU project. It provides a menu from which you can select the operating system to boot if you have multiple operating systems installed on your computer.
