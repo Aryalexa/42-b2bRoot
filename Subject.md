@@ -49,7 +49,11 @@ Information to show:
 - Number of commands executed as `sudo`  
 
 ### BONUS ✨
-...
+1. Configure partitions as..
+![partitions bonus](partitions_bonus.png)
+
+2. Configure a functional WordPress site with the following services: lighttpd, MariaDB, and PHP.
+3. Configure a service of your choice that you consider useful (NGINX / Apache2 excluded). Justify your choice.
   
   
 ## **Evaluation**  
