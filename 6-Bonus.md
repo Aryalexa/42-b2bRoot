@@ -125,7 +125,7 @@ $
   - `sudo apt install php-cgi php-mysql`.
 
 ##### 🔸 WordPress configuration
-WordPress setting are configured with the file `wp-config.php`.
+WordPress settings are configured with the file `wp-config.php`.
 - Go to `/var/www/html`.
 - Use the sample provided to create the config file.
 - Start to edit it.
@@ -156,7 +156,7 @@ $ sudo nano wp-config.php
 - To make changes access the admin panel at `localhost/wp-admin` and login.
 
 
-#### II. A useful service of your choice: X
+#### II. A useful service of your choice: vsftpd
 
 > We can't choose NGINX or Apache2. What are NGINX and Apache2?
 > 
@@ -165,3 +165,140 @@ $ sudo nano wp-config.php
 > - Apache supports a variety of features, including the ability to serve static and dynamic content, handle virtual hosts, and provide support for various modules and extensions
 > - Nginx is a high-performance, open-source web server and reverse proxy server.
 > - Nginx is designed to be lightweight, scalable, and efficient, making it particularly suitable for serving static content and handling a large number of concurrent connections.
+>
+Chat Server (Matrix Synapse)
+We can choose whatever we want..
+- A different web server like LiteSpeed
+- Fail2ban, a security measure for SSH against brute force attacks.
+- A database Server (MySQL or PostgreSQL)
+- A File Server (vsftpd or ProFTPD)
+- A Version Control Server (Git)
+- A chat server (Matrix Synapse)
+- A monitoring service (Prometheus + Grafana)
+- A VPN Server (OpenVPN or WireGuard)
+- A Container Orchestration (Docker + Kubernetes)
+- A Personal Cloud (Nextcloud or ownCloud)
+- A Game Server (Minecraft, Factorio, etc.)
+
+We are going to do a file server (with vsftpd) and a VPN server (with OpenVPN).
+
+#### 🔹 vsftpd (File Server)
+Let's go through setting up a file server using vsftpd (Very Secure FTP Daemon) first.
+
+1. Install vsftpd:
+
+```bash
+$ sudo apt update
+$ sudo apt install vsftpd
+```
+2. Configure vsftpd:
+
+- Open the configuration file for editing:
+
+```bash
+$ sudo nano /etc/vsftpd.conf
+```
+- Ensure the following configurations are set or modify them accordingly:
+
+```conf
+anonymous_enable=NO
+local_enable=YES
+write_enable=YES
+chroot_local_user=YES
+```
+- These settings disable anonymous access, allow local users to login, enable write permissions, and chroot users to their home directory.
+
+3. Restart vsftpd:
+
+```bash
+sudo service vsftpd restart
+```
+4. Create User Accounts:
+
+- Create a new user for FTP access:
+
+```bash
+sudo adduser ftpuser
+```
+- Set a password for the new user.
+
+5. Test FTP Access:
+
+- Use an FTP client (e.g., FileZilla) to connect to your server using the created user credentials. Connect to the server's IP address or hostname.
+
+#### 🔹 OpenVPN (VPN Server):
+1. Install OpenVPN:
+
+```bash
+sudo apt update
+sudo apt install openvpn
+```
+2. Configure OpenVPN:
+
+- Copy the sample configuration files:
+
+```bash
+sudo cp /usr/share/doc/openvpn/examples/sample-config-files/server.conf.gz /etc/openvpn/
+sudo gzip -d /etc/openvpn/server.conf.gz
+```
+- Edit the configuration file:
+
+```bash
+sudo nano /etc/openvpn/server.conf
+```
+- Ensure the following lines are uncommented or add them:
+
+```conf
+push "redirect-gateway def1 bypass-dhcp"
+push "dhcp-option DNS 208.67.222.222"
+push "dhcp-option DNS 208.67.220.220"
+```
+These lines redirect all client traffic through the VPN and set DNS options.
+
+- Generate a static key for additional security:
+
+```bash
+openvpn --genkey --secret /etc/openvpn/static.key
+```
+3. Start OpenVPN:
+
+```bash
+sudo service openvpn start
+```
+- Ensure OpenVPN starts at boot:
+
+```bash
+sudo systemctl enable openvpn
+```
+4.Generate Client Configuration:
+
+- On the server, generate a client configuration:
+
+```bash
+sudo nano /etc/openvpn/easy-rsa/keys/client.ovpn
+```
+- Add the following content, replacing your_server_ip with your server's IP address:
+
+```conf
+client
+dev tun
+proto udp
+remote your_server_ip 1194
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+ca ca.crt
+cert client.crt
+key client.key
+remote-cert-tls server
+```
+- Save the file.
+
+5. Securely Transfer Client Configuration:
+
+- Transfer the client.ovpn, client.crt, client.key, and static.key files to the client machine securely.
+6. Connect from Client:
+
+- On the client, use an OpenVPN client to connect using the provided configuration.
+
