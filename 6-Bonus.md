@@ -12,14 +12,11 @@ We want a functional WordPress site with Lighttpd, MariaDB and PHP.
 > - It is a popular choice for both beginners and experienced web developers.
 >
 > To set up a WordPress site, we need the following componenents:
-> - A web server to serve the site. (Apache and Nginx are commonly used web servers. We have to use Lighttpd).
-> - WordPress is written in PHP, so we need a PHP runtime installed to execute PHP.
-> - A database server to store its content and configuration.
-> - WordPress files (from the official website) to store in the server.
-> - configure wp: database and `wp-config.php`
-> - configure web server (to serve the WordPress files)
-> - Decide on the domain or IP address where you want to access your WordPress site.
-> - A web browser to access and interact with your WordPress site (we'll use a host browser)
+> - A **web server** to serve the site. (Apache and Nginx are commonly used web servers. We have to use Lighttpd).
+> - WordPress is written in **PHP**, so we need a PHP runtime installed to execute PHP.
+> - A **database server** to store its content and configuration.
+> - **WordPress** files (from the official website) to store in the server.
+> - A **web browser** to access and interact with your WordPress site (we'll use a host browser)
 
 ##### 🔸 Web server: Lighttpd
 - Install it `sudo apt install`.
