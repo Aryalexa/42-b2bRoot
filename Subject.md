@@ -4,10 +4,10 @@
 
 Create a VM with the following requirements.
 - Virtualization software: VirtualBox (or UTM)
-- SO: last stable version of *Debian*  
-- Partitions: at least 2 *encrypted partitions* created with LVM  
+- OS: last stable version of *Debian*  
+- Partitions: at least 2 *encrypted partitions* created with LVM  (see bonus.1, for bonus partitions configuration)
 - Main service: The *SSH* service. It should run only on port `4242`. For security reasons, it should not be possible to connect via SSH as root.  
-- Configure you SO with the *firewall* UFW, leaving only port `4242` open. (The FW should be active when executing the VM)  
+- Configure your OS with the *firewall* UFW, leaving only port `4242` open. (The FW should be active when executing the VM)  
 - `hostname` of your VM: `{42login}42`.  
 - Use a strong *password policy*  
 	- passwords expire after 30 days  
@@ -30,9 +30,11 @@ In order to configure a strong password for the group `sudo`:
 - `TTY` mode must be active for security reasons.  
 - For security reasons, usable directories by `sudo` should be restricted. Example:  
 	- `/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin`  
-  
+
+> (!)⚠️☢️ - After tuning your *config files*, all passwords for all current accounts in the VM should be change, root included. > so all passwords comply with the new configurations.
+
 ### BASH SCRIPT `monitoring.sh`  
-When the server starts, the script should show some information every 10 minutes in all terminals (see `wall`). The wall banner is optional. No errors should seen.  
+When the server starts, the script should show some information every 10 minutes in all terminals (see `wall`). The wall banner is optional. No errors should be seen.  
 The script may be interrupted during evaluation (see `cron`).  
 Information to show:  
 - Your OS architecture and its kernel version  
@@ -57,13 +59,17 @@ Information to show:
   
   
 ## **Evaluation**  
-  
-During evaluation  
-- Change the hostname of the VM  
+☢️ At the start of every evaluation, the `signature.txt` file and the .vdi file will be compare to check if the state of your VM is the same as at the time of submitting.
+-> 2 options: create a snapshot and roll back each time or just clone the hole thing VM 3 times.
+
+⚠️ During evaluation
+- What are VMs? What are they used for? how do they work?
+- Change the hostname of the VM
+- Passwords should comply with the password policies.
 - Create a new user to use with SSH  
 - Create a new user and assign them to a group  
-- Answer questions about the OS selected and basic understanding of all tools used (aptitude vs apt, SELinux, AppArmor)  
-- The script may be interrupted (see `cron`)  
+- Answer questions about the OS selected (Debian vs Rocky), and basic understanding of all tools used (aptitude vs apt, SELinux, AppArmor)
+- The script may be interrupted (see `cron`)
   
-(!)⚠️☢️ - Después de preparar tus *archivos de configuración*, deberás cambiar la contraseña de todas las cuentas presentes en la máquina virtual, root incluida.  
+
   
