@@ -2,7 +2,7 @@
 Let's create the bash script called `monitoring.sh`.
 
 script = sequence of commands in a file to be executed in sequencial order
-#### Contents
+#### Table of Contents
 1. Create the file
 2. How to extract info from other commands: `grep` and `awk`
 3. Content
@@ -27,7 +27,7 @@ $ chmod 755 monitoring.sh
 > Some Bash scripting basics:
 > - bash variables.
 > Variable names are case-sensitive.
-> Use the equal sign (=) to assign a value to a variable.
+> Use the equal sign `=` to assign a value to a variable.
 > We use `echo` to print.
 > ```bash
 > name="John"
@@ -36,13 +36,13 @@ $ chmod 755 monitoring.sh
 > echo "Age: $age"
 > ```
 > - command substitution.
-> Use $(command) to capture the output of a command.
+> Use `$(command)` to capture the output of a command.
 > ```bash
 > current_date=$(date)
 > echo "Current date: $current_date"
 > ```
-> - conditional statements
-> using `-eq`, `-lt`, `-ge`, .. to compare if necessary.
+> - conditional statements.
+> Use `-eq`, `-lt`, `-ge`, .. to compare if necessary.
 > ```bash
 > if [ $age -eq 99 ]; then echo "Yes"
 > else echo "No"
@@ -73,6 +73,7 @@ cat input_file | awk 'pattern { action }'
 - It is a text processing tool, designed for pattern scanning and processing.
 - It processes the input line by line, performing the action to each line that matches the pattern given.
 - `awk '{print $1, $3}' filename` prints the first and third columns of each line in the given file.
+- It supports formatting too: `{printf("%.2f"), $1}`, `{printf("%.1"), $2}`, `{printf("%.1f%%"), $2}`, `{print $3 " " $4}`, ...
 - And much more.
 
 Using both you can filter specific words:
@@ -89,13 +90,15 @@ For the printing we'll use `wall`, it not only prints, it broadcasts.
 > `wall` command
 > - It is used to send a message to all users who are currently logged in. A broadcast!
 > - The word "wall" stands for "write all."
-> ```
-> wall "Attention to all users"
-> echo "This is a broadcast message" | wall
-> script_with_echo | wall
+> ```shell
+> $ wall "Attention to all users"
+> $ echo "This is a broadcast message" | wall
+> $ script_with_echo | wall
 > ```
 Something like this:
-```
+```bash
+#!/bin/bash
+
 INFO1=$(command_for_arch)
 INFO2=$(command_for_arch)
 wall "
@@ -130,7 +133,11 @@ cpul=$(vmstat 1 2 | tail -1 | awk '{printf $15}')
 cpu_op=$(expr 100 - $cpul)
 cpu_fin=$(printf "%.1f" $cpu_op)
 ```
-##### 🔸 7. Date and time of last boot
+or
+```
+top -bn1 | grep '^%Cpu' | awk '{printf("%.1f%%"), $2}'
+```
+##### 🔸 7. Date and time of last system boot
 See `who -b`.
 ##### 🔸 8. Whether LVM is active or not
 We want to print "yes" or "no" based on the LVM status.
@@ -145,7 +152,7 @@ For IP address: see `hostname -I`.
 
 For MAC address: see `ip link `.
 ##### 🔸 12. Number of commands executed as sudo
-Remember the log?
+Remember the log? what was the name of the file?
 `SUDO_LOG=$(grep COMMAND /var/log/sudo/sudo.log | wc -l)`
 
 #### 🟦 4. Make it work every 10 mins in all terminals
@@ -170,4 +177,6 @@ To schedule the execution of the script every 10 minutes:
 - Add at this end of the file: `*/10 * * * * /usr/local/bin/monitoring.sh` (`*/10` for "every" 10 minutes)
 
 (enable cron?? `# systemctl enable cron`)
+
+(to make it running after reboot add `@reboot /path/to/monitoring.sh` too ??)
 
