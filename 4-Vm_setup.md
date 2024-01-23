@@ -123,14 +123,13 @@ Defaults  secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/
 
 
 #### 🟪 Tools installation
-You can install what you see necessary. These are all optional.
+You can install what you see necessary. This is optional.
 
->if using `apt-get` update and upgrade just in case: `apt-get update -y`, `apt-get upgrade -y`
+> if using `apt-get` update and upgrade before just in case: `apt-get update -y`, `apt-get upgrade -y`
+> if using `apt`, the same: `apt update`, `apt upgrade`
 
-- git: `apt-get install git -y` , `git --version`
-- wget: `sudo apt-get install wget` (a free and open source tool for downloading files from web repositories.)
-- vim: `sudo apt-get install vim` or `sudo apt install vim` to edit files.
-- oh my zsh
+- vim: `sudo apt-get install vim` or `sudo apt install vim` to edit files. Nano is installed by default in Debian.
+
 
 #### 🟪 SSH configuration
 - Lets install and configure a SSH service.
