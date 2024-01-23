@@ -37,15 +37,38 @@ Several ways, sudo package example:
 ```
 ### 🟧 Cron
 
-Cron stop and start
+First of all, learn to identify the cron job process.
+
+You can see all cron jobs within the cron table with `crontab` (-e option to edit it, -u user option to specify the owner of the cron table).
+
+To dentify the process ID (PID) of the cron job here you have 2 ways:
+```
+$ pgrep -f "your_cron_command_or_script"
+$ ps aux | grep "your_cron_command_or_script"
+```
+
+Now we want to learn how to stop them...
+
+❌ Cron stop and start
 ```
 $ sudo /etc/init.d/cron stop
 $ sudo /etc/init.d/cron start
 ```
+- The cron service runs for the entire system, affecting all users' scheduled jobs. The cron service runs as a system daemon. (`sudo service cron restart john` would restart the cron service only for the user "john")
 - Keep in mind that stopping the cron service will prevent new jobs from starting, but it won't necessarily terminate jobs that are currently running.
+- (stop the service and try searching for the process to check if it is still running)
+- The `cron` command and the `crontab` utility are mainly concerned with scheduling and managing cron jobs, not with their real-time execution control.
 
-For a specific job, delete the line int he cron table to stop the job from running.
+❌ For a specific job, delete the line int he cron table to stop the job from running. This prevents the job from being scheduled and executed in the future.
 - `sudo crontab -e` to edit the root's cron jobs.
+- (comment the line and try searching for the process to check if it is still running)
+
+✅ For a specific job you want to stop:
+- Identify the process ID (PID) of the cron job. 
+- Terminate/kill the process using the PID: `sudo kill <PID>` (-9 option to force)
+- Job interrupted!
+- To make the cron job run again
+  - Restart the cron service: `sudo /etc/init.d/cron restart` to allow new scheduled jobs to run.
 
 ### 🟧 SSH config files
 
