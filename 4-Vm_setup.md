@@ -171,7 +171,7 @@ You can install what you see necessary. This is optional.
 > - iptables is a traditional powerful and flexible firewall tool in Linux.
 > - It simplifies the process of configuring and managing a firewall on Linux.
 > - UFW is primarily managed through the command line.
-> - UFW follows the principle of "default deny": incoming traffic is denied unless explicitly allowed by configured rules.
+> - UFW follows the principle of "default deny": incoming traffic is denied unless explicitly allowed by configured rules. While outgoing traffic is allowed by default, so you can connect to other servers without any problems.
 > - UFW includes application profiles that allow users to enable predefined sets of rules for common services and applications (like OpenSSH, Apache, or Nginx).
 
 Let's install UFW and enable it.
