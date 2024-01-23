@@ -92,7 +92,7 @@ Reaload privilege tables now? → Y
 - Once MariaDB is installed, create both a DB and a user for WordPress to use.
   - Let's enter "mariadb mode".
   - The DB can be named as you wish.
-  - Create the user providing its password (`IDENTIFIED BY 'pssw'`)
+  - Create the user (the below instruction creates a user with the username 'login' who can connect only from localhost and has the password '12345')
   - Grant the user privileges (all) for the new DB.
   - Use "flush" to refresh the privileges and get last changes.
 ```
