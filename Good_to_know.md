@@ -2,15 +2,15 @@
 ## Good to know - prepare for evaluation
 
 > 🌳
-> 
-> 🟧 *Package Management tools*
-> - `apt` is a command-line package management tool that simplifies the process of installing, updating, and removing packages. It is a high-level interface to the underlying Advanced Package Tool (APT) libraries.
-> - `apt-get` has a more traditional and verbose command-line interface. It was the original package management tool on Debian-based systems and is known for its extensive set of options. It and `apt` share the same underlying package management libraries. It is still widely used and supported, especially in scripts and automation. Use the `-y` option for automatic `yes`.
-> - `aptitude` is also a command-line package management tool, but it provides a more interactive and text-based interface compared to `apt`. It is designed to be more user-friendly and includes additional features beyond package management.
->
+
+### 🟧 *Package Management tools*
+- `apt` is a command-line package management tool that simplifies the process of installing, updating, and removing packages. It is a high-level interface to the underlying Advanced Package Tool (APT) libraries.
+- `apt-get` has a more traditional and verbose command-line interface. It was the original package management tool on Debian-based systems and is known for its extensive set of options. It and `apt` share the same underlying package management libraries. It is still widely used and supported, especially in scripts and automation. Use the `-y` option for automatic `yes`.
+- `aptitude` is also a command-line package management tool, but it provides a more interactive and text-based interface compared to `apt`. It is designed to be more user-friendly and includes additional features beyond package management.
 
 
-🟧 Change the VM hostname
+
+### 🟧 Change the VM hostname
 - change the name in both files and reboot the machine
 ```
 $ sudo nano /etc/hostname
@@ -18,10 +18,36 @@ $ sudo nano /etc/hosts
 $ sudo reboot
 ```
 
+### 🟧 What is AppArmor?
+- AppArmor (Application Armor) is a Linux security module that provides Mandatory Access Control (MAC) by confining programs to a limited set of resources and actions.
+- why: to restrict the capabilities of individual programs to minimize the potential damage they can cause if compromised.
+- MAC works based on policies set by the system administrator or security policies defined by the organization (the organization's security team or IT administrators). Unlike discretionary access control (DAC), where users have control over their own objects, MAC is enforced by the operating system and restricts users' ability to change access controls.
+- AppArmor is commonly used on Ubuntu and other Debian-based distributions, while SELinux is often found on Red Hat and CentOS systems.
 
-## Good to know - but maybe too much
+### 🟧 Check installed packages
 
-### 🟨 SSH config files
+Several ways, sudo package example:
+```
+# which sudo
+
+# dpkg -l | grep sudo
+# dpkg -s sudo
+
+# apt list --installed | grep sudo
+```
+### 🟧 Cron
+
+Cron stop and start
+```
+$ sudo /etc/init.d/cron stop
+$ sudo /etc/init.d/cron start
+```
+- Keep in mind that stopping the cron service will prevent new jobs from starting, but it won't necessarily terminate jobs that are currently running.
+
+For a specific job, delete the line int he cron table to stop the job from running.
+- `sudo crontab -e` to edit the root's cron jobs.
+
+### 🟧 SSH config files
 
 SSH config files: `/etc/ssh/ssh_config` vs `/etc/ssh/sshd_config`
 
@@ -31,6 +57,9 @@ SSH config files: `/etc/ssh/ssh_config` vs `/etc/ssh/sshd_config`
 OpenSSH client and server
 - OpenSSH client: it is the program you use to connect from your machine to other machines using SSH.
 - OpenSSH daemon (`sshd`): it is the server-side component of OpenSSH, that handles incoming SSH connections.
+
+## Good to know - but maybe too much
+
 
 ### 🟨 Network Addresses
 1. IP Address:
