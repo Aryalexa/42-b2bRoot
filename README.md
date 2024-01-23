@@ -1,8 +1,10 @@
 # b2bR
 
-The 42 project Born2beroot explores the fundamentals of system administration by inviting us to install and configure a virtual machine with VirtualBox (or UTM).
+This project serves you as a virtualization introduction.
+You will explore the fundamentals of system administration with a virtual machine,
+and configure your first server there.
 
-Target: configure your first server using a VM
+Topics: Network & system administration
 
 ## Table of contents
 - [Subject](https://github.com/Aryalexa/42-b2bRoot/blob/main/Subject.md#b2br-subject)
@@ -11,7 +13,7 @@ Target: configure your first server using a VM
 - [COMMANDS](https://github.com/Aryalexa/42-b2bRoot/blob/main/Commands.md#commands)
 - The implementation
     1. [Create new VM](https://github.com/Aryalexa/42-b2bRoot/blob/main/1-Create_vm.md#1-create-new-vm)
-    2. [Install Debian](https://github.com/Aryalexa/42-b2bRoot/blob/main/2-Install_Debian.md#2-install-debian)🟡
+    2. [Install Debian](https://github.com/Aryalexa/42-b2bRoot/blob/main/2-Install_Debian.md#2-install-debian)
     3. [Start the VM](https://github.com/Aryalexa/42-b2bRoot/blob/main/3-Start_vm.md#3-start-the-vm)
     4. Set up
        - [`sudo` installation](https://github.com/Aryalexa/42-b2bRoot/blob/main/4-Vm_setup.md#-sudo-installation)
@@ -22,8 +24,8 @@ Target: configure your first server using a VM
        - [UFW Firewall configuration](https://github.com/Aryalexa/42-b2bRoot/blob/main/4-Vm_setup.md#-ufw-firewall-configuration)
        - [Test SSH communication with your VM](https://github.com/Aryalexa/42-b2bRoot/blob/main/4-Vm_setup.md#-test-ssh-communication-with-your-vm)
        - [Password policy](https://github.com/Aryalexa/42-b2bRoot/blob/main/4-Vm_setup.md#-password-policy)
-    5. [The script](https://github.com/Aryalexa/42-b2bRoot/blob/main/5-Script.md#5-script)🟡
-    6. Bonus🔴
+    5. [The script](https://github.com/Aryalexa/42-b2bRoot/blob/main/5-Script.md#5-script)
+    6. [Bonus](https://github.com/Aryalexa/42-b2bRoot/blob/main/6-Bonus.md#6-bonus)
     7. [Signature](https://github.com/Aryalexa/42-b2bRoot/blob/main/7-Signature.md#7-signature)
 - [Good to know - prepare for evaluation](https://github.com/Aryalexa/42-b2bRoot/blob/main/Good_to_know.md#good-to-know---prepare-for-evaluation)🟡
 - [Good to know - but maybe too much](https://github.com/Aryalexa/42-b2bRoot/blob/main/Good_to_know.md#good-to-know---but-maybe-too-much)
