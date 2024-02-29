@@ -12,9 +12,11 @@ Main parts:
 - Configure the package manager
 - Install boot loader
 
-> - Make the display bigger by clicking the `blue display at the bottom` > `Virtual screen` > `Scale to 200%`
+
+Start the machine with the Start button.
+> - You can make the display bigger by clicking the `blue display at the bottom` > `Virtual screen` > `Scale to 200%`
 > - Use the `cmd` key so the machine captures your mouse and vice versa.
-> - Use arrows keys and `enter` to navigate during the installation (except otherwise specified) 🔴#todo: check when experienced
+> - Use arrows keys and `enter` to navigate during the installation (except otherwise specified, sometimes you can use the space to select/deselect) experienced
 #### 🟩 Start installation
 > 🌳 
 > 
@@ -65,7 +67,7 @@ Main parts:
 #### 🟩 Configure the partitions
 - Configure the **partition disks**. Two options here.
 	- `Guided - use entire disk and set up encrypted LVM` as we want encrypted partitions, or
-	- `Manual` if we want to do the ✨bonus✨ (➡️ go to "Configure the partitions BONUS")
+	- `Manual` if we want to do the ✨bonus✨ (➡️ go to [Configure the partitions BONUS](https://github.com/Aryalexa/42-b2bRoot/blob/main/2-Install_Debian.md#-configure-the-partitions-bonus))
 > 🌳 
 > 
 > *Setting up encrypted LVM...*
