@@ -159,17 +159,21 @@ The first part of the bonus consists in having customized partitions as in the i
 
 ![partitions_bonus](partitions_bonus.png)
 
+SDA is the way Linux marks the partitions/drives/storage devices it senses. For example, the way in windows 10 there is C:,D:,F: e.t.c.
 Here we see three partitions, the first one is "boot" and the last one is encrypted with 7 logical volumes in the "LVMGroup" group.
 
 Let's understand as we proceed...
 - Select `Manual` for customized partitions.
-- Select the only disk we have to set up its partitions (sda hard disk)
+- Select the only disk we have to set up its partitions (sda - the only device)
 - Confirm we want to create a new empty partition table on the selected device.
-- Now we see the overview of the current partitions. There's a `free space` to create partitions, select it to create them.
+- Now we see the overview of the current partitions that let us manage the partitions.
+   - There's a `free space` to create partitions under the device, ee will use it to create new partitions.
 
 We will crete 2 partitions:
-- Create an unencrypted /boot partition: `pri/log xxGB FREE SPACE` >> `Create a new partition` >> `500 MB` >> `Primary` >> `Beginning` >> `Mount point` >> `/boot` >> `Done`.
-- Create a partition for the encrypted logical volumes: `pri/log xxGB FREE SPACE` >> `Create a new partition` >> `max` >> `Logical` >>  `Mount point` >> `Do not mount it` >> `Done`.
+- Let's create the /boot partition (unencrypted) that will be primary and of size 500 MB:
+    - `pri/log xxGB FREE SPACE` >> `Create a new partition` >> `500 MB` >> `Primary` >> `Beginning` >> Select `Mount point` to modify it >> `/boot` >> `Done`.
+- Let's create a partition for the encrypted logical volumes, it will logical and will use the rest of the available space:
+    - `pri/log xxGB FREE SPACE` >> `Create a new partition` >> `max` >> `Logical` >>  `Mount point` >> Select `Do not mount it` >> `Done`.
 
 > 🌳
 >
@@ -198,7 +202,7 @@ We will crete 2 partitions:
 Now that we have two partitions, let's configure the **encrypted** volumes on the second.
 - Select `Configure encrypted volumes` and confirm.
 - Select `Create encrypted volumes` and the select the disk we want to encrypt (do not encrypt the boot partition)
-- `Done` >> `Finish` >> `Done`. The encryption starts.
+- `Done` >> `Finish` >> `Yes` to confirm the erase. The encryption starts and it will take some time.
 - You will be prompted to provide a passphrase or encryption key. This passphrase will be required to unlock the encrypted volumes each time the system boots.
 
 We are going to configure the encrypted **Logical Volume Manager**.
