@@ -16,7 +16,7 @@ Main parts:
 Start the machine with the Start button.
 > - You can make the display bigger by clicking the `blue display at the bottom` > `Virtual screen` > `Scale to 200%`
 > - Use the `cmd` key so the machine captures your mouse and vice versa.
-> - Use arrows keys and `enter` to navigate during the installation (except otherwise specified, sometimes you can use the space to select/deselect) experienced
+> - Use arrows keys and `enter` to navigate during the installation (sometimes you can use the space to select/deselect and tab to move) experienced
 #### 🟩 Start installation
 > 🌳 
 > 
@@ -213,14 +213,14 @@ We are going to configure the encrypted **Logical Volume Manager**.
 > LVM is a system that manages logical volumes or partitions on a Linux system, it provides a layer of abstraction between the physical storage devices and the file systems, allowing you to create, resize and move logical volumes dynamically.
 
 - We start the configuration selecting `Create volume group`, and name the new volume group `LVMGroup` and select the encrypted partition for the group to be in.
-- Now let's create all the Logical Volumes we need:
-	- `Create Logical Volume` >> `LVMGroup` >> `root` >> `10G`
-	- `Create Logical Volume` >> `LVMGroup` >> `swap` >> `2.3G`
-	- `Create Logical Volume` >> `LVMGroup` >> `home` >> `5G`
-	- `Create Logical Volume` >> `LVMGroup` >> `var` >> `3G`
-	- `Create Logical Volume` >> `LVMGroup` >> `srv` >> `3G`
-	- `Create Logical Volume` >> `LVMGroup` >> `tmp` >> `3G`
-	- `Create Logical Volume` >> `LVMGroup` >> `var-log` >> `4G`
+- Now let's create all the Logical Volumes we need (If my encrypted volume is of size 12G, i'm going to change these sizes to fit):
+	- `Create Logical Volume` >> `LVMGroup` >> `root` >> (`10G` or `4G`)
+	- `Create Logical Volume` >> `LVMGroup` >> `swap` >> `2.3G` or `1G`
+	- `Create Logical Volume` >> `LVMGroup` >> `home` >> `5G` or `2G`
+	- `Create Logical Volume` >> `LVMGroup` >> `var` >> `3G` or `1G`
+	- `Create Logical Volume` >> `LVMGroup` >> `srv` >> `3G` or `1G`
+	- `Create Logical Volume` >> `LVMGroup` >> `tmp` >> `3G` or `1G`
+	- `Create Logical Volume` >> `LVMGroup` >> `var-log` >> `4G` or `2G`
  	- `Finish` (you can use `Display configuration details` to check before finishing)
  - For each LV we have specified the LG it belongs to, its name and its size.
 
@@ -242,7 +242,7 @@ Now we see the overview and we need to configure each LV with its file system an
 
 ![logical volumes](https://user-images.githubusercontent.com/66915274/197400386-f66494c5-97b9-4bb9-8c75-5856d69d26cc.png)
 
-Once the seven LVs are configured, select `Finish partitioning and write changes to disk` and confirm.
+Once the seven LVs are configured, select `Finish partitioning and write changes to disk` and confirm. And wait.
 
 > 🌳 
 > 
@@ -250,17 +250,17 @@ Once the seven LVs are configured, select `Finish partitioning and write changes
 
 
 #### 🟩 Configure the package manager
-- Configure the **package manager (apt)**. Now we are asked if we want to add more media, apart from the Debian we have downloaded and selected, to be used by the package manager. We say no.
+- Configure the **package manager (apt)**. Now we are asked if we want to add more media, apart from the Debian we have downloaded and used, to be used by the package manager. We say no.
 - Now the package manager needs to find a mirror. The mirror is use to keep the Debian system updated, secure, and to install additional software. We select our *country*, and then the archive *mirror* `deb.debian.org`.
-- As the system is going to connect to the mirror, the installer ask us if we need an *HTTP proxy*, let's just leave this blank and continue.
+- As the system is going to connect to the mirror, the installer ask us if we need an *HTTP proxy*, let's just leave this blank and continue. And wait.
 - Do we want to participate in Debian *stats*? No, this is just a one time project.
-- Now we are asked which *additional software* we want the package manager to install. We need none, so deselect everything and continue.
+- Now we are asked which *additional software* we want the package manager to install. We need none, so deselect everything and continue. And wait.
 
 #### 🟩 Install Boot loader
-- Right after, the installer recommend us to install *GRUB boot loader* as we are installing an OS, and to install it on the primary partition (`/boot`). We say yes and proceed to install it in the bootable device we were recommended: `/dev/sda`.
+- Right after, the installer recommend us to install *GRUB boot loader* as we are installing an OS, and to install it on the primary partition (`/boot`). We say yes and proceed to install it in the bootable device we were recommended: `/dev/sda`. Aaand wait.
 > 🌳 
 > 
 > The GRUB (Grand Unified Bootloader) is a boot loader from the GNU project. It provides a menu from which you can select the operating system to boot if you have multiple operating systems installed on your computer.
 > 
 
-The Debian installation is complete!
+The Debian installation is complete! Let's reboot it!
