@@ -215,21 +215,21 @@ Let's forward the host port 4242 to the guest port 4242, so that connections to 
 
 To connect, use the `ssh` command (option `-p`: Port to connect to on the remote host).
 
-Let's connect from our machine (host) to the VM (guest).
-- In the host terminal (your computer), connect like this and introduce your created password.
+🔸 Let's connect from our machine (host) to the VM (guest).
+- In the host terminal (your computer), connect like this and introduce your created password. (use `localhost` as hostname). Create a directory and see how it appears in the VM!
 ```shell
 $ ssh <username>@vm_hostname -p <vm_port>
 ```
 
 - To quit the ssh connection, type `exit`.
 
-Let's connect from VM (guest) to host. This will be possible if SSH is enable in the host.
+🔸  Let's connect from the VM (guest) to our machine (host). This will be possible if SSH is enable in the host.
 - In a terminal within the VM, connect like this:
 ```shell
 $ ssh <username>@host_ip_address -p <host_port>
 ```
 - You might need to find out the IP address of your host machine using a command like `ifconfig`/`ip a` (on Linux).
-- To close the ssh connection, type `exit`.
+- To close the ssh connection, type `exit`. [ip address info](https://apple.stackexchange.com/questions/20547/how-do-i-find-my-ip-address-from-the-command-line), Mac: `netstat -anl|grep LISTEN|grep "*.22"`
 
 As we are using the same machine as both the host and the guest (e.g., running the VM locally on your computer), we can use `localhost` as the host IP address and as the vm hostname.
 ```shell
