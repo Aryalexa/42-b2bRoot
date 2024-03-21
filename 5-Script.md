@@ -1,13 +1,16 @@
 ### 5. Script
-Let's create the bash script called `monitoring.sh`.
+Let's create the bash script called `monitoring.sh` that prints in all terminals every ten minutes.
 
 script = sequence of commands in a file to be executed in sequencial order
-#### Table of Contents
+
+So let's create it and write some commands in it using the bash programming language.
+
+#### Steps
 1. Create the file
-2. How to extract info from other commands: `grep` and `awk`
+2. Learn how to extract info from other commands: `grep` and `awk`
 3. Content
 4. Make it work every 10 mins in all terminals
-5. The script
+5. Check if it works
 
 #### 🟦 1. Create the file
 
@@ -77,15 +80,15 @@ cat input_file | awk 'pattern { action }'
 - And much more.
 
 Using both you can filter specific words:
-- `wc *.c | grep total | awk '{print $1}'` prints the number of lines for all .c files in the current directory.
+- `wc -l *.c | grep total | awk '{print $1}'` prints the number of lines for all .c files (use more than one file to make `wc` print the total calculations) in the current directory.
 
 #### 🟦 3. Content
 We want our script to show something lke this:
 
 ![script message](script_output.png)
 
-The idea is gathering all the information in variables and then printing them in the order that is expected.
-For the printing we'll use `wall`, it not only prints, it broadcasts.
+The idea is gathering all the information in variables and then printing them in order to reproduce the image above.
+For the printing we can use `echo` or `wall`. `wall` not only prints, it broadcasts (the script should print to all terminals).
 > 🌳
 > `wall` command
 > - It is used to send a message to all users who are currently logged in. A broadcast!
@@ -99,8 +102,8 @@ Something like this:
 ```bash
 #!/bin/bash
 
-INFO1=$(command_for_arch)
-INFO2=$(command_for_arch)
+INFO1=$(command_for_arch1)
+INFO2=$(command_for_arch2)
 wall "
       Info1    : $INFO1
       Info2    : $INFO2"
@@ -117,6 +120,7 @@ The command `uname -a` gives us:
 - Machine Hardware: The hardware type of the machine.
 
 ##### 🔸 2. Number of physical cores
+See 3.
 ##### 🔸 3. Number of virtual cores
 For physical and virtual cores we can use the file `/proc/cpuinfo`. See the lines with "physical id" and "processor".
 ##### 🔸 4. Current RAM memory available in your server and its usage as a percentage
