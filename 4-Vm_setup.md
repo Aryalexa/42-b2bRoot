@@ -24,7 +24,7 @@ So we need to do some system changes to add and configure all this, we need some
 
 
 Let's install `sudo` on Debian. For this we'll use the package manager again (`apt` in our case). 
-- Installing tools requires high privileges so this time we are going to use the root account: we *substitute user* to root with the command `su`/`su -`/`su root` and introduce the root password.
+- Installing tools requires high privileges so this time we are going to use the root account: we *substitute user* to root with the command `su -`/`su - root` and introduce the root password.
 - Update (fetch) and upgrade (pull) installed packages and start installation.
 ```
 $ su -
@@ -38,7 +38,7 @@ $ su -
 > `su` (substitute user) command
 > - root is used if no username is provided
 > - After authentication, your shell will be switched to that user's environment.
-> - The hyphen (`-`) option sets up the environment as if you had logged in directly as the specified user. Preserving the environment variables of the target user.
+> - The hyphen (`-`) option sets up the environment as if you had logged in directly as the specified user. Preserving the environment variables of the target user. We need this to unlock all root capabilities.
 > - To return to the original user's session, simply type `exit` or press Ctrl+D.
 > - When switching from normal user to root, the prompt changes from `$` to `#`.
 >
@@ -49,21 +49,21 @@ $ su -
 > 🌳 
 > 
 > *Commands for users and groups management*
-> - add existing users to the `sudo` *group*. Two ways. 
+> - add existing users to the `sudo` *group* (the users that can use sudo). Two ways. 
 > ```
-> # usermod -aG sudo username
-> # adduser username groupname(sudo)
+> # usermod -aG GROUPNAME USERNAME
+> # adduser USERNAME GROUPNAME
 > ```
-> - create new users and groups, and include users into groups. GID = group ID.
+> - create new users and groups, and include users into groups. The GID (group ID) is shown when a group is created.
 > ```
-> $ sudo adduser username
-> $ sudo addgroup groupname
+> $ sudo adduser USERNAME
+> $ sudo addgroup GROUPNAME
 > 
-> $ sudo adduser username groupname
+> $ sudo adduser USERNAME GROUPNAME
 > ```
 > - To check if group exists and its users
 >  ```
->  $ getent group groupname
+>  $ getent group GROUPNAME
 >  ```
 >  - check if your current user has `sudo` privileges. If you are a `sudo` user, the answer must be `root`
 >  ```
@@ -86,22 +86,23 @@ $ getent group user42
 
 #### 🟪 `sudo` configuration
 
-Let's change some `sudo` configurations. We are going to use `visudo` for that.
-- Access to edit sintax-wise safely: `sudo visudo`
-- Find the default lines and change/add these settings:
+Let's change some `sudo` configurations. We are going to use the `visudo` command (that let's you edit sintax-wise safely the sudo config file `/etc/sudoers` using a tmp file).
+- Access to edit the sudo config file: `sudo visudo`
+- Find the "default" lines. We want these settings:
   - Three tries at most to authenticate as `sudo`
   - Show message if authentication password is wrong
   - Save input and output for every command executed as `sudo` in the directory `/var/log/sudo/`. ( ☢️ If `var/log/sudo` directory does not exist, `mkdir var/log/sudo`)
   - `TTY` mode must be active for security reasons.  
   - The usage of `sudo` must be restricted for some directories:
     - `/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin`
+- To achieve the above, we need to add/edit the following lines:
 ```	
 Defaults  passwd_tries=3
 Defaults  badpass_message="Wrong password. Try again!"
 Defaults  logfile="/var/log/sudo/sudo.log"
 Defaults  log_input, log_output
 Defaults  iolog_dir="/var/log/sudo"
-Defaults  requirett
+Defaults  requiretty
 Defaults  secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"
 ```
 
@@ -116,16 +117,16 @@ Defaults  secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/
 > - The file determines which users or groups are granted sudo privileges and what commands they are allowed to run with elevated privileges.
 > - It contains lines like `username  ALL=(ALL:ALL) ALL` "hosts=(users:groups) commands" -> the username is allowed to run any command on any host as any user or group.
 > - It also contains a defaults section where you can configure some `sudo` settings.
-> 	- `iolog_dir` configures the input/output (I/O) logging directory for `sudo`. It is specifically used for I/O logging (capturing command input and output). 🔴
-> 	- `log_file` :location and filename for the sudo session logs. It is used for general session logging.🔴
-> 	- `requiretty` means that the user must run sudo command from a real terminal session (no processes or scripts). `TTY` (teletype writer/terminal) is a terminal interface that allows users to interact with the system by entering commands and receiving text-based output.
+> 	- `iolog_dir` configures the input/output (I/O) logging directory for `sudo`. It is specifically used for I/O logging (capturing the command input and output).
+> 	- `log_file` : we specify the filename for the sudo session logs.
+> 	- `requiretty` means that the user must run sudo command from a real terminal session (no through processes or scripts). It forces sudo to ensure we are in a logged-in TTY session. If we set the option, but the conditions are not met, we get an error `TTY` (teletype writer) is a terminal interface (for entering commands and receiving text-based output). One of the main reasons we use requiretty is protection from scripts using sudo. If requiretty is disabled, we allow any sudo user to be remotely and automatically exploited to acquire full access to the system. Still, although requiretty can provide valuable protection, its use is fairly limited and limiting.
 >  
 
 
 #### 🟪 Tools installation
 You can install what you see necessary. This is optional.
 
-> if using `apt-get` update and upgrade before just in case: `apt-get update -y`, `apt-get upgrade -y`
+> if using `apt-get`, update and upgrade before just in case: `apt-get update -y`, `apt-get upgrade -y`
 > if using `apt`, the same: `apt update`, `apt upgrade`
 
 - vim: `sudo apt-get install vim` or `sudo apt install vim` to edit files. Nano is installed by default in Debian.
@@ -136,14 +137,14 @@ You can install what you see necessary. This is optional.
 
 > 🌳 
 > 
-> **SSH (Secure Shell)** is a cryptographic network protocol.
+> **SSH (Secure Shell)** is a cryptographic network communication protocol that enables two computers to communicate.
 > - It is used for secure *communication* over an unsecured network. 
 > - It provides a secure way to *access and manage remote systems*, allowing users to 
 > 	- *log* into a remote machine, 
 > 	- *execute* commands in a remote machine, and
 > 	- *transfer* files from or to a remote machine.
 > - It utilizes a client-server paradigm, in which clients and servers communicate via a secure channel.
-> - Use: Connect to hostname as username ``ssh username@hostname``
+> - Use: Connect to a host as a specific user ``ssh username@hostname``
 > - OpenSSH is the most common implementation of SSH and is available on various Unix-like operating systems, including Linux and macOS.
 > 
 
@@ -151,10 +152,10 @@ You can install what you see necessary. This is optional.
 - Install OpenSSH `sudo apt install openssh-server`
 - Check SSH server status: `sudo service ssh status` or `sudo systemctl status ssh`, see if it appears active/running. (Execute `sudo service ssh restart` if it's not active).
 - Let's change some configurations by editing (use nano or vim) its configuration files
-	- Edit server: `sudo nano /etc/ssh/sshd_config`.
+	- Edit server (daemon): `sudo nano /etc/ssh/sshd_config`.
 		- The SSH listening port should be `4242`. Uncomment and change port line from `#Port 22` to `Port 4242`.
 		- It should not be possible to connect via SSH as root, so we must change the line `#PermitRootLogin...` to `PermitRootLogin no`
-	- Edit client: `sudo nano /etc/ssh/ssh_config`.
+	- Edit client: `sudo nano /etc/ssh/ssh_config`. 
  		- The SSH port the connection goes out from should be `4242`: `#Port 22` to `Port 4242`.
 - Restart the service `sudo service ssh restart` and check status `sudo service ssh status`. We must see that the server is active and listening through port 4242.
 
@@ -167,11 +168,13 @@ You can install what you see necessary. This is optional.
 > - They form the first line of defense against various cyber threats.
 >
 > *UFW (Uncomplicated Firewall)*
-> It's a user-friendly front-end for managing iptables.
-> - iptables is a traditional powerful and flexible firewall tool in Linux.
-> - It simplifies the process of configuring and managing a firewall on Linux.
+> It's a user-friendly front-end for managing iptables. 
+> - iptables is a traditional powerful and flexible firewall program in Linux.
+> - UFW simplifies the process of configuring and managing the iptables firewall on Linux.
 > - UFW is primarily managed through the command line.
-> - UFW follows the principle of "default deny": incoming traffic is denied unless explicitly allowed by configured rules. While outgoing traffic is allowed by default, so you can connect to other servers without any problems.
+> - UFW follows the principle of "default deny":
+>     - Incoming traffic is denied unless explicitly allowed by configured rules.
+>     - While outgoing traffic is allowed by default, so you can connect to other servers without any problems.
 > - UFW includes application profiles that allow users to enable predefined sets of rules for common services and applications (like OpenSSH, Apache, or Nginx).
 
 Let's install UFW and enable it.
@@ -200,7 +203,7 @@ Now lets add/change some rules: `sudo ufw allow 4242` in order to allow 4242 for
 
 #### 🟪 Test SSH communication with your VM
 
-We have to make the VM accesible from the network. We do this by redirecting ports using port forwarding in our virtualization software (Virtual Box).
+We have to make the VM accesible from the network (outside). We do this by redirecting ports using port forwarding in our virtualization software (Virtual Box).
 Let's forward the host port 4242 to the guest port 4242, so that connections to port 4242 on the host will be directed to port 4242 on the virtual machine.
 - In VirtualBox:
 	- go to VM >> `Settings` >> `Network` >> `Adapter 1` >> `Advanced` >> `Port Forwarding`.
@@ -212,7 +215,7 @@ Let's forward the host port 4242 to the guest port 4242, so that connections to 
 
 To connect, use the `ssh` command (option `-p`: Port to connect to on the remote host).
 
-Let's connect from host to VM (guest).
+Let's connect from our machine (host) to the VM (guest).
 - In the host terminal (your computer), connect like this and introduce your created password.
 ```shell
 $ ssh <username>@vm_hostname -p <vm_port>
