@@ -220,22 +220,27 @@ To connect, use the `ssh` command (option `-p`: Port to connect to on the remote
 ```shell
 $ ssh <username>@vm_hostname -p <vm_port>
 ```
-
 - To quit the ssh connection, type `exit`.
 
-🔸  Let's connect from the VM (guest) to our machine (host). This will be possible if SSH is enable in the host.
+🔸 Let's connect from the VM (guest) to our machine (host). This will be possible if SSH is enable in the host (default ssh (listening) port is 22).
+- To enable remote connection in you MacOS: Open System Preferences, go to Sharing, and enable Remote Login.
+- You might need to find out the IP address of your host machine.
+	- get IP address on MacOS: `ipconfig getifaddr en0`
+ 		- This command retrieves the IP address of the primary network interface (en0), which is usually the Wi-Fi interface. If you're using a different network interface, replace en0 with the appropriate interface name (e.g., en1 for Ethernet).
 - In a terminal within the VM, connect like this:
 ```shell
-$ ssh <username>@host_ip_address -p <host_port>
+$ ssh <username>@host_ip_address [-p <host_port>]
 ```
-- You might need to find out the IP address of your host machine using a command like `ifconfig`/`ip a` (on Linux).
-- To close the ssh connection, type `exit`. [ip address info](https://apple.stackexchange.com/questions/20547/how-do-i-find-my-ip-address-from-the-command-line), Mac: `netstat -anl|grep LISTEN|grep "*.22"`
+- To close the ssh connection, type `exit`.
 
-As we are using the same machine as both the host and the guest (e.g., running the VM locally on your computer), we can use `localhost` as the host IP address and as the vm hostname.
+🔸🔸 As the VM is running on the host machine, we can use "localhost" as both host and guest (vm) hostnames/IP addresses.
+- When you use "localhost" or "127.0.0.1" from within the VM, it refers to the network interface of the VM itself, which is the same physical machine that hosts the VM. Therefore, any services or processes running on the host machine that are configured to listen on localhost or 127.0.0.1 can be accessed from within the VM using these addresses.
 ```shell
 $ ssh <username>@localhost -p <target_port>
 $ ssh <username>@127.0.0.1 -p <target_port>
 ```
+--> `ssh user@localhost -p 4242` from our machine
+--> `ssh user@localhost -p 22` from the vm
 
 #### 🟪 Password policy
 Two steps for complying with the subject
