@@ -10,7 +10,7 @@ What we want:
 - A strict password policy
 - A script (we'll leave this for step-5)
 
-So we need to do some system changes to add and configure all this, we need some elevated privileges. Safer than using the root account, the `sudo` command is used for these tasks. 
+So we need some system changes to add and configure all this, we need some elevated privileges. Safer than using the root account, the `sudo` command is used for these tasks. 
 
 #### 🟪 `sudo` installation
 
@@ -133,7 +133,7 @@ You can install what you see necessary. This is optional.
 
 
 #### 🟪 SSH configuration
-- Lets install and configure a SSH service.
+- Let's install and configure a SSH service.
 
 > 🌳 
 > 
@@ -199,31 +199,31 @@ Now lets add/change some rules: `sudo ufw allow 4242` in order to allow 4242 for
 >   $ sudo ufw delete deny <port>
 >   $ sudo ufw delete <rule index number>
 >   ```
->   Careful with the numbered method, the index numbers change after a deletion, check between deletes to get the correct port index number!
+>   Careful with the numbered method, the index numbers change after a deletion, check between deletes to get the correct index number!
 
 #### 🟪 Test SSH communication with your VM
 
-We have to make the VM accesible from the network (outside). We do this by redirecting ports using port forwarding in our virtualization software (Virtual Box).
+We have installed SSH in our VM to make it accesible remotely. So let's login to our VM from our machine. The SSH server in the VM needs a port for when someone connects from outside. So the VM need a port, but because this is a virtual machine (guest), it needs to use our machine (host) ports. We make a port available for the VM by redirecting ports using "port forwarding" in our virtualization software (Virtual Box).
 Let's forward the host port 4242 to the guest port 4242, so that connections to port 4242 on the host will be directed to port 4242 on the virtual machine.
 - In VirtualBox:
 	- go to VM >> `Settings` >> `Network` >> `Adapter 1` >> `Advanced` >> `Port Forwarding`.
 	- add a rule: TCP protocol, host port 4242 and guest port 4242.
 - Restart SSH service after this change `sudo service ssh restart` or `sudo systemctl restart ssh`.
-- Check if SSH is active and which port is listening (for both the host and the VM(guest))
+- Check if SSH is active and which port is listening (in the VM(guest))
 	- Linux: `sudo systemctl status ssh` or `sudo service ssh status` (ssh status)
 	- Linux: `sudo ss -tlnp | grep sshd` or `cat /etc/ssh/sshd_config` (ssh server port)
 
 To connect, use the `ssh` command (option `-p`: Port to connect to on the remote host).
 
-🔸 Let's connect from our machine (host) to the VM (guest).
+🔸 Let's connect from our machine (host) to the VM (guest). 
 - In the host terminal (your computer), connect like this and introduce your created password. (use `localhost` as hostname). Create a directory and see how it appears in the VM!
 ```shell
 $ ssh <username>@vm_hostname -p <vm_port>
 ```
 - To quit the ssh connection, type `exit`.
 
-🔸 Let's connect from the VM (guest) to our machine (host). This will be possible if SSH is enable in the host (default ssh (listening) port is 22).
-- To enable remote connection in you MacOS: Open System Preferences, go to Sharing, and enable Remote Login.
+🔸 If we want to connect from the VM (guest) to our machine (host): This will be possible only if SSH is enable in the host (default ssh (listening) port is 22).
+- To enable remote connection in your MacOS: Open System Preferences, go to Sharing, and enable Remote Login.
 - You might need to find out the IP address of your host machine.
 	- get IP address on MacOS: `ipconfig getifaddr en0`
  		- This command retrieves the IP address of the primary network interface (en0), which is usually the Wi-Fi interface. If you're using a different network interface, replace en0 with the appropriate interface name (e.g., en1 for Ethernet).
@@ -255,7 +255,7 @@ Lets change this for current users too. You can use `chage -l <username>` to see
 ```
 $ sudo chage -M 30 <username/root>
 $ sudo chage -m 2 <username/root>
-$ sudo chage -W 7 <username/root>
+$ sudo change -W 7 <username/root>
 ```
 2. Change passwords requirements
 Install Password Quality Checking Library and edit its settings.
@@ -268,12 +268,12 @@ Change the line `password  requisite     pam_pwquality.so` to
 password  requisite     pam_pwquality.so  retry=3 minlen=10 ucredit=-1 lcredit=-1 dcredit=-1 maxrepeat=3 reject_username difok=7 enforce_for_root
 ```
 so the passwords..
+  	- three retries before error (`retry=3`)
 	- consists of minimum 10 characters (`minlen=10`)
 	- must contain a capital letter and a number (`ucredit=-1 lcredit=-1 dcredit=-1` for uppercase, lowercase and digits, `-` for minimum and `+` for maximum)
 	- cannot have the same character consecutively repeated more than 3 times (`maxrepeat=3`)
 	- cannot contain the user name (`reject_username`)
-	- must contain at least 7 new characters not included in the old password (`difok=7`). This rule does not apply for the root password)
+	- must contain at least 7 new characters not included in the old password (`difok=7`). This rule does not apply for the root password.
  	- The policy applies to root (`enforce_for_root`)
-  	- three retries before error (`retry=3`)
 
-Use `sudo passwd <username>` to change your password and make it comply with the new policy.
+Use `sudo passwd <username>` to change your password and make it comply with the new policy (for root and your user).
