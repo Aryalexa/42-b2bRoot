@@ -6,7 +6,7 @@ What we want:
 - A SSH service
 - A firewall
 - Managing users and groups
-- Change some sudo configurations
+- Change some `sudo` configurations
 - A strict password policy
 - A script (we'll leave this for step-5)
 
@@ -16,7 +16,9 @@ So we need some system changes to add and configure all this, we need some eleva
 
 > 🌳 
 > 
-> `sudo` (Superuser Do) is a command-line utility. It needs to be installed and configured, and it allows authorized users to execute commands with elevated privileges.
+> `sudo` (Superuser Do) is a command-line utility that lets you run a command as a "superuser".
+> - It needs to be installed and configured.
+> - It allows authorized users to execute commands with elevated privileges.
 > - It provides fine-grained access control, allowing administrators to define which users or groups can run specific commands with elevated privileges.
 > - It maintains a log (audit trail) of each command executed with elevated privileges, (who, when and what).
 > - It adheres to the *principle of least privilege*, a security best practice.
@@ -46,20 +48,23 @@ $ su -
 
 #### 🟪 users and groups management
 
+Unix-like systems support multiple users. Each user has their own home directory, their own files, and their own permissions.
+We want:
+- two users: root (this one exists by default and is the ultimate superuser) and a user with your login.
+- Your user must be part of the groups `user42` and `sudo` (the users that can use sudo).
+
 > 🌳 
 > 
 > *Commands for users and groups management*
-> - add existing users to the `sudo` *group* (the users that can use sudo). Two ways. 
-> ```
-> # usermod -aG GROUPNAME USERNAME
-> # adduser USERNAME GROUPNAME
-> ```
-> - create new users and groups, and include users into groups. The GID (group ID) is shown when a group is created.
+
+> - create new users and groups, and create user into a group. The GID (group ID) is shown when a group is created.
 > ```
 > $ sudo adduser USERNAME
 > $ sudo addgroup GROUPNAME
-> 
+>
 > $ sudo adduser USERNAME GROUPNAME
+> // existing user and group:
+> $ sudo usermod -aG GROUPNAME USERNAME 
 > ```
 > - To check if group exists and its users
 >  ```
@@ -71,8 +76,7 @@ $ su -
 >  ```
 >  
 
-
-Now we can add our user to `sudo`, exit root session, create the `user42` group and include our user there too.
+Now we can create our user while adding it to `sudo`, exit root session, create the `user42` group and include our user there too.
 
 ```
 # adduser my_login sudo
@@ -87,7 +91,7 @@ $ getent group user42
 #### 🟪 `sudo` configuration
 
 Let's change some `sudo` configurations. We are going to use the `visudo` command (that let's you edit sintax-wise safely the sudo config file `/etc/sudoers` using a tmp file).
-- Access to edit the sudo config file: `sudo visudo`
+- Access to edit the sudo config file with the command `sudo visudo`
 - Find the "default" lines. We want these settings:
   - Three tries at most to authenticate as `sudo`
   - Show message if authentication password is wrong
