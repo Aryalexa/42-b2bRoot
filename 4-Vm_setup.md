@@ -111,7 +111,7 @@ Defaults  secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/
 ```
 
 
-> 🌳 🔴
+> 🌳 
 > 
 > *`visudo` command* 
 > - Running the command will open the `/etc/sudoers` file in the system's default text editor, allowing you to make and save changes to the sudo configuration.
@@ -226,16 +226,12 @@ $ ssh <username>@vm_hostname -p <vm_port>
 ```
 - To quit the ssh connection, type `exit`.
 
-🔸 If we want to connect from the VM (guest) to our machine (host): This will be possible only if SSH is enable in the host (default ssh (listening) port is 22).
-- To enable remote connection in your MacOS: Open System Preferences, go to Sharing, and enable Remote Login.
-- You might need to find out the IP address of your host machine.
+🔸 If we would want to connect from the VM (guest) to our machine (host): This will be possible only if SSH is enable in the host and let any user connect remotely (default ssh (listening) port is 22). 
+- 🔴 This is not part of the subject and it does not work in 42 campuses as we are not permitted to connect remotely to the machines
+- You can see remote connection settings in your MacOS: Open System Preferences, go to Sharing, and enable Remote Login. 42 machines with Mac shows you "To log in to this computer remotely, type `ssh yourlogin@c1r1s1.42madrid.com`" with your user, desk number and campus. But as I said early, students don't have access, only administrators.
+- You might want to find out the IP address of your host machine.
 	- get IP address on MacOS: `ipconfig getifaddr en0`
  		- This command retrieves the IP address of the primary network interface (en0), which is usually the Wi-Fi interface. If you're using a different network interface, replace en0 with the appropriate interface name (e.g., en1 for Ethernet).
-- In a terminal within the VM, connect like this:
-```shell
-$ ssh <username>@host_ip_address [-p <host_port>]
-```
-- To close the ssh connection, type `exit`.
 
 🔸🔸 As the VM is running on the host machine, we can use "localhost" as both host and guest (vm) hostnames/IP addresses.
 - When you use "localhost" or "127.0.0.1" from within the VM, it refers to the network interface of the VM itself, which is the same physical machine that hosts the VM. Therefore, any services or processes running on the host machine that are configured to listen on localhost or 127.0.0.1 can be accessed from within the VM using these addresses.
@@ -244,24 +240,23 @@ $ ssh <username>@localhost -p <target_port>
 $ ssh <username>@127.0.0.1 -p <target_port>
 ```
 --> `ssh user@localhost -p 4242` from our machine
---> `ssh user@localhost -p 22` from the vm
 
 #### 🟪 Password policy
-Two steps for complying with the subject
-1. Change password and accounts aging settings
-We do this by editing the `/etc/login.defs` file.
-For `password aging controls`, let's modify the file so all new users get this configuration. 
+Two steps to fulfill the subject:
+1. 🔹 Change password and accounts aging settings 🔹
+We do this by editing the `/etc/login.defs` file, don't forget to use sudo.
+Look for `password aging controls` in the file, let's modify the file so all new users get this configuration. 
 - `PASS_MAX_DAYS 30`: passwords expire after 30 days
-- `PASS_MIN_DAYS 2`: the minimum number of days allowed before changing the password is 2
+- `PASS_MIN_DAYS 2`: the minimum number of days allowed between password changes is 2
 - `PASS_WARN_AGE 7`: the user is notified with a message 7 days before the password expires
 
-Lets change this for current users too. You can use `chage -l <username>` to see current settings and the following to update them.
+Let's change this for current users too. You can use `chage -l <username>` (`chage`: change age) to see current settings and the following to update them.
 ```
 $ sudo chage -M 30 <username/root>
 $ sudo chage -m 2 <username/root>
-$ sudo change -W 7 <username/root>
+$ sudo chage -W 7 <username/root>
 ```
-2. Change passwords requirements
+2. 🔹 Change passwords requirements 🔹
 Install Password Quality Checking Library and edit its settings.
 ```
 $ sudo apt install libpam-pwquality
@@ -272,12 +267,12 @@ Change the line `password  requisite     pam_pwquality.so` to
 password  requisite     pam_pwquality.so  retry=3 minlen=10 ucredit=-1 lcredit=-1 dcredit=-1 maxrepeat=3 reject_username difok=7 enforce_for_root
 ```
 so the passwords..
-  	- three retries before error (`retry=3`)
+  	- gives you three retries before error (`retry=3`)
 	- consists of minimum 10 characters (`minlen=10`)
-	- must contain a capital letter and a number (`ucredit=-1 lcredit=-1 dcredit=-1` for uppercase, lowercase and digits, `-` for minimum and `+` for maximum)
+	- must contain a capital letter, a lower letter and a number (`ucredit=-1 lcredit=-1 dcredit=-1` for uppercase, lowercase and digits, `-` for minimum and `+` for maximum)
 	- cannot have the same character consecutively repeated more than 3 times (`maxrepeat=3`)
 	- cannot contain the user name (`reject_username`)
 	- must contain at least 7 new characters not included in the old password (`difok=7`). This rule does not apply for the root password.
  	- The policy applies to root (`enforce_for_root`)
 
-Use `sudo passwd <username>` to change your password and make it comply with the new policy (for root and your user).
+✨ Use `sudo passwd <username>` to change your password and make it comply with the new policy (for root and your user).
