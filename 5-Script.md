@@ -1,5 +1,5 @@
 ### 5. Script
-Let's create the bash script called `monitoring.sh` that prints in all terminals every ten minutes.
+Let's create the bash script called `monitoring.sh` that prints to all terminals every ten minutes.
 
 script = sequence of commands in a file to be executed in sequencial order
 
@@ -23,8 +23,8 @@ So let's create it and write some commands in it using the bash programming lang
 Create the file `monitoring.sh` and give it execution permissions.
 ```
 $ cd /usr/local/bin
-$ touch monitoring.sh
-$ chmod 755 monitoring.sh
+$ sudo touch monitoring.sh
+$ sudo chmod 755 monitoring.sh
 ```
 > 🌳
 > Some Bash scripting basics:
@@ -36,7 +36,7 @@ $ chmod 755 monitoring.sh
 > name="John"
 > age=25
 > echo "Name: $name"
-> echo "Age: $age"
+> echo "Age: ${age}yo"
 > ```
 > - command substitution.
 > Use `$(command)` to capture the output of a command.
@@ -76,14 +76,14 @@ cat input_file | awk 'pattern { action }'
 - It is a text processing tool, designed for pattern scanning and processing.
 - It processes the input line by line, performing the action to each line that matches the pattern given.
 - `awk '{print $1, $3}' filename` prints the first and third columns of each line in the given file.
-- It supports formatting too: `{printf("%.2f"), $1}`, `{printf("%.1"), $2}`, `{printf("%.1f%%"), $2}`, `{print $3 " " $4}`, ...
+- It supports formatting too: `{printf("%.2f"), $1/$2}`, `{printf("%.1"), $2}`, `{printf("%.1f%%"), $2}`, `{print $3 " " $4}`, ...
 - And much more.
 
 Using both you can filter specific words:
 - `wc -l *.c | grep total | awk '{print $1}'` prints the number of lines for all .c files (use more than one file to make `wc` print the total calculations) in the current directory.
 
 #### 🟦 3. Content
-We want our script to show something lke this:
+We want our script to show something like in this image:
 
 ![script message](script_output.png)
 
@@ -102,8 +102,8 @@ Something like this:
 ```bash
 #!/bin/bash
 
-INFO1=$(command_for_arch1)
-INFO2=$(command_for_arch2)
+INFO1=$(command_for_info1)
+INFO2=$(command_for_info2)
 wall "
       Info1    : $INFO1
       Info2    : $INFO2"
@@ -111,22 +111,25 @@ wall "
 
 So let's gather all the information to show:
 
+> Idea: use as many extra terminals as you want to try the commands or edit the script using ssh.
+
 ##### 🔸 1. Your OS architecture and its kernel version
 The command `uname -a` gives us:
-- System Name: The name of the operating system.
+- System Kernel Name: The name of the operating system kernel (Linux)
 - Node Name: The network node (hostname) of the machine on the network.
-- Kernel Release: The release level of the operating system kernel.
-- Kernel Version: The version of the operating system kernel.
-- Machine Hardware: The hardware type of the machine.
+- Kernel Release: The release level of the operating system kernel. (6.1.0-18-amd64)
+- Kernel Version: The version of the operating system kernel. (#1 SMP Debian 6.1.76-1 (2024-02-01))
+- Machine Hardware: The hardware type of the machine. (x86_64)
+- Operating system name. (GNU/Linux)
 
 ##### 🔸 2. Number of physical cores
 See 3.
 ##### 🔸 3. Number of virtual cores
-For physical and virtual cores we can use the file `/proc/cpuinfo`. See the lines with "physical id" and "processor".
+For physical and virtual cores we can use the file `/proc/cpuinfo`. See the lines with "physical id" and "processor". There will be one line per core, so counting the lines with the keyword will give us the number of cores (`wc -l` word count command counts lines with option `-l`).
 ##### 🔸 4. Current RAM memory available in your server and its usage as a percentage
-Use `free` to show RAM data. See options `--mega`, `-h`, `-k`. 
+Use `free` to show RAM data. See option `--mega`. Format: "Used/{Total}MB (percentage%)"
 ##### 🔸 5. Current memory available in your server and its usage as a percentage (disk)
-Use `df` to show disk data. See options `--total`, `-h`, `-k`. 
+Use `df` to show disk data. See option`--total`, `-h`. Format: "{Used}/{Total}GB (percentage%)"
 ##### 🔸 6. Current percentage of core/cpu load
 ```
 CPU_LOAD=$(top -bn1 | grep '^%Cpu' | xargs | awk '{printf("%.1f%%"), $2 + $4}')
