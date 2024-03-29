@@ -75,8 +75,10 @@ cat input_file | awk 'pattern { action }'
 ```
 - It is a text processing tool, designed for pattern scanning and processing.
 - It processes the input line by line, performing the action to each line that matches the pattern given.
+- The pattern can be omitted, applying the action to every line.
 - `awk '{print $1, $3}' filename` prints the first and third columns of each line in the given file.
-- It supports formatting too: `{printf("%.2f"), $1/$2}`, `{printf("%.1"), $2}`, `{printf("%.1f%%"), $2}`, `{print $3 " " $4}`, ...
+- In the action part you can print the column(s) directly or apply math operation and formatting if you need: `{printf("%.2f"), $1/$2}` 1.33, `{printf("%.1f%%"), $2}` 30.5%, `{print $3 " " $4}` 1 2, ...
+- It can modify a variable for each line that matches the pattern: `cat lines.txt | awk 'PATTERN {total += $1} {total2 += $2} END {printf "%.1f", total+total2}'` will sum all first words in each line and print the total.
 - And much more.
 
 Using both you can filter specific words:
@@ -128,27 +130,44 @@ See 3.
 For physical and virtual cores we can use the file `/proc/cpuinfo`. See the lines with "physical id" and "processor". There will be one line per core, so counting the lines with the keyword will give us the number of cores (`wc -l` word count command counts lines with option `-l`).
 ##### 🔸 4. Current RAM memory available in your server and its usage as a percentage
 Use `free` to show RAM data. See option `--mega`. Format: "Used/{Total}MB (percentage%)"
+- So we'll need al least 3 variables: `ram_used`, `ram_total` and `ram_pct`.
+- Use `grep` or `awk` to select the line with "Mem".
+- Use `awk` to select the column we need for each var. For the percent we can do 
 ##### 🔸 5. Current memory available in your server and its usage as a percentage (disk)
-Use `df` to show disk data. See option`--total`, `-h`. Format: "{Used}/{Total}GB (percentage%)"
+Use `df` to show disk data. See options `--total`, `-h`. Format: "{Used}/{Total}GB (percentage%)"
+- `df` (disk free) displays information about the disk space usage on filesystems. Each row is a filesystem (device or partition) mounted in the system.
+      - The first column `1K-blocks` are the total size of the filesystem in blocks of 1KB. Use `-m` to see megas.
+      - tmpfs is a temporary filesystem that resides in memory, it does not consume physical disk space. So better exclude it.
+      - If you're interested in total disk space usage, you should include /boot. If you're only interested in filesystems that store user data, you may choose to exclude it.
+- Use `grep` to select only lines that start with "/dev": `grep "^/dev"`
+- Use `awk` to select the correct column and sum them all.
 ##### 🔸 6. Current percentage of core/cpu load
-```
-CPU_LOAD=$(top -bn1 | grep '^%Cpu' | xargs | awk '{printf("%.1f%%"), $2 + $4}')
-```
-or
-```
-cpul=$(vmstat 1 2 | tail -1 | awk '{printf $15}')
-cpu_op=$(expr 100 - $cpul)
-cpu_fin=$(printf "%.1f" $cpu_op)
-```
-or
-```
-top -bn1 | grep '^%Cpu' | awk '{printf("%.1f%%"), $2}'
-```
+CPU usage is typically defined as the percentage of time the CPU spends executing non-idle tasks compared to the total time.
+Format: {pct}%
+🔘 Options 1 and 2: using `vmstat` (virtual memory stats) or `mpstat` (multiple processor stats). Both utilities provide information about CPU utilization, including user, system, idle, and wait times, which can be used to calculate CPU usage percentages.
+- `vmstat 1 3`/`mpstat 1 3` shows the stats every 1 second, 3 times. See for yourself if the last row here is better than `vmstat`/`mpstat` output.
+      - the first provides usage statistics over a brief period of time, allowing you to see how usage changes over time.
+      - the second displays average usage statistics since the last reboot.
+- Select the last row with `tail -1`.
+- Then select the columns representing the idle time (check the man)
+      - The idle time represents the percentage of time the CPU is not actively executing any tasks. It includes the time when the CPU is idle and waiting for work to do.
+      - usage % = 100% - idle %
+- Code:
+      - `vmstat 1 1 | tail -n1 | awk '{print 100 - $15 "%"}'`, the 15th column typically corresponds to the idle CPU time
+      - `mpstat 1 1 | tail -n1 | awk '{print 100 - $NF "%"}'`, $NF refers to the last column, which typically corresponds to the idle CPU time.
+🔘 Option 3:
+- `top -bn1 | grep "Cpu(s)" | awk '{print 100 - $8"%"}'` - this runs top in batch mode (-b) for one iteration (-n1), then filters the output to extract the CPU usage percentage.
 ##### 🔸 7. Date and time of last system boot
-See `who -b`.
+See `who -b`. Format: YYYY-MM-DD HH:mm
 ##### 🔸 8. Whether LVM is active or not
 We want to print "yes" or "no" based on the LVM status.
-See `lsblk`.
+Regarding LVM (Logical Volume Management), lsblk typically displays information about LVM volumes and their associated devices.
+If LVM (Logical Volume Management) is not active or configured on the system, the lsblk command will only display information about physical disks and their partitions.
+See `lsblk` (option `-o`?), it will show lvm info if it is active.
+```
+lvm_val=$(...)
+lvm_active=$(if [ $lvm_val -gt 0 ]; then echo yes; else echo no; fi)
+```
 ##### 🔸 9. Number of active connections
 Let's count TCP connections.
 See `ss -ta` or the file `/proc/net/sockstat`
@@ -171,19 +190,18 @@ The `wall` command allows us to broadcast a message to all users in all terminal
 > 🌳
 >
 > `cron`
-> - It is a time-based job scheduler in Unix-like operating systems.
+> - It is a time-based job scheduler in Unix-like operating systems. The cron daemon enables cron functionality and runs in background.
 > - It allows users to schedule tasks (commands or scripts) to run automatically at specified intervals or specific times.
-> - These scheduled tasks are often referred to as "cron jobs."
-> - The scheduling is stored in a configuration file called the "crontab" (cron table).
-> - Each user on a Unix system can have their own crontab file, and system-wide cron jobs may also be defined.
-> - A `cron` job is defined by a line in the crontab file (when, who, what)
-> - A job line is like `minute hour day month day_of_week usr command_or_/path/to/script_to_execute`, where the user can be ommited and the owner of the crontab is the default user.
+> - These scheduled tasks are often referred to as "cron jobs".
+> - The scheduling is stored in a configuration file called the "crontab" (cron table). You can see the table with `crontab -u <owner> -l`.
+>    - Each user on a Unix system can have their own crontab file, and system-wide cron jobs may also be defined.
+>    - Each line represents a scheduled cron job, showing the timing and command to be executed (when, who, what).
+>    - A job line is like `minute hour day month day_of_week usr <command_or_/path/to/script_to_execute>`, where the user can be ommited and the owner of the crontab is the default user.
+> - The cron daemon automatically starts at boot time and reads the crontab files to schedule and execute the specified tasks.
 
 To schedule the execution of the script every 10 minutes:
-- Edit the the crontab file with `sudo crontab -u root -e` (the root's crontab) and add the rule.
-- Add at this end of the file: `*/10 * * * * /usr/local/bin/monitoring.sh` (`*/10` for "every" 10 minutes)
+- Edit the the root's crontab file with `sudo crontab -u root -e`.
+- Add a new rule at end of the file: `*/10 * * * * /usr/local/bin/monitoring.sh` (`*/10` for "every" 10 minutes)
 
-(enable cron?? `# systemctl enable cron`)
-
-(to make it running after reboot add `@reboot /path/to/monitoring.sh` too ??)
-
+- (check cron service `sudo systemctl status cron.service`)
+- (enable cron?? `# systemctl enable cron`)
