@@ -6,23 +6,23 @@ We want a functional WordPress site with Lighttpd, MariaDB and PHP.
 > 🌳
 > 
 > WordPress is a popular open-source content management system (CMS)
-> - IT allows users to create and manage websites and blogs.
+> - It allows users to create and manage websites and blogs.
 > - It is built on PHP and uses a MySQL or MariaDB database to store content and configurations.
-> - It provides a user-friendly interface, a wide range of themes and plugins, and flexibility.
+> - It provides a user-friendly interface and a wide range of themes and plugins.
 > - It is a popular choice for both beginners and experienced web developers.
 >
 > To set up a WordPress site, we need the following componenents:
 > - A **web server** to serve the site. (Apache and Nginx are commonly used web servers. We have to use Lighttpd).
-> - WordPress is written in **PHP**, so we need a PHP runtime installed to execute PHP.
-> - A **database server** to store its content and configuration.
 > - **WordPress** files (from the official website) to store in the server.
+> - A **database server** to store its content and configuration.
+> - WordPress is written in **PHP**, so we need a PHP runtime installed to execute PHP.
 > - A **web browser** to access and interact with your WordPress site (we'll use a host browser)
 
 ##### 🔸 Web server: Lighttpd
 - Install it `sudo apt install`.
 - Allow connection on port 80 `sudo ufw allow 80`. (use `sudo ufw status` to check)
 - Forward the port
-  - go to VM >> `Settings` >> `Network` >> `Adapter 1` >> `Advanced` >> `Port Forwarding`.
+  - go to VM >> `Settings` >> `Network` >> `Adapter 1` >> `Advanced` >> `Port Forwarding` and add the port.
   - Type `http://127.0.0.1:8080` or `http://localhost:8080` in your host browser. You should see a Lighttpd "placeholder page".
 
 > 🌳
@@ -35,7 +35,7 @@ We want a functional WordPress site with Lighttpd, MariaDB and PHP.
 > - It is well-suited for scenarios where resource efficiency and high performance are critical, such as serving static content, handling a large number of concurrent connections, or acting as a reverse proxy.  
 
 ##### 🔸 WordPress
-- In order to install WP, we need wget and zip.
+- In order to install WP, we need to install wget and zip first.
 - Change directory `cd /var/www` to install WP here.
 - Get the download link for the latest version of WP at [wordpress.org/download](https://wordpress.org/download/), choose zip format.
 - Download WP with wget, unzip the package and rename paths.
@@ -46,8 +46,8 @@ $ cd /var/www
 $ sudo wget https://es.wordpress.org/latest-es_ES.zip
 $ sudo unzip latest-es_ES.zip
 $ sudo mv html/ html_old/
-$ sudo mv wordpress/ html
-$ sudo chmod -R 755 html
+$ sudo mv wordpress/ html/
+$ sudo chmod -R 755 html/
 ```
 
 > 🌳
@@ -74,8 +74,12 @@ $ sudo mysql_secure_installation
 >
 > `mysql_secure_installation`
 > - It is a script provided with MySQL and MariaDB that helps to secure the installation by performing various security-related tasks. The configuration includes:
+>   - It asks whether we want to use `unix_socket` authentication. Instead of relying on a username and password combination, this method leverages the operating system's user authentication mechanism, specifically Unix sockets. >> No
+>     - It would check if the provided username corresponds to a valid system user on the operating system where the server is running.
+>     - Unix_socket authentication is specific to Unix-like operating systems (such as Linux).
+>     - Additionally, it only applies when the client and server are both on the same host, as it relies on local Unix sockets for communication.
+>     - a socket is a combination of an IP address and a port number that uniquely identifies a communication channel between two processes.
 >   - If there is no root password set, the script will prompt you to set a password for the root user >> No (no password) or Yes (and provide the password). Saying No is OK.
->   - It asks whether we want to use `unix_socket` authentication. This would allow the root (local only) to access without password, authentication would be based on the user's OS credentials rather than a password. >> No
 >   - It lets you remove anonymous users, which would connect without providing any credentials. >> Yes
 >   - It lets you disallow remote login for the root user, adding a layer of security >> Yes
 >   - It lets you remove test databases >> Yes
