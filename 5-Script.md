@@ -144,47 +144,54 @@ Use `df` to show disk data. See options `--total`, `-h`. Format: "{Used}/{Total}
 ##### 🔸 6. Current percentage of core/cpu load
 CPU usage is typically defined as the percentage of time the CPU spends executing non-idle tasks compared to the total time.
 Format: {pct}%
-🔘 Options 1 and 2: using `vmstat` (virtual memory stats) or `mpstat` (multiple processor stats). Both utilities provide information about CPU utilization, including user, system, idle, and wait times, which can be used to calculate CPU usage percentages.
-- `vmstat 1 3`/`mpstat 1 3` shows the stats every 1 second, 3 times. See for yourself if the last row here is better than `vmstat`/`mpstat` output.
-      - the first provides usage statistics over a brief period of time, allowing you to see how usage changes over time.
-      - the second displays average usage statistics since the last reboot.
+
+🔘 Options 1: using `vmstat` (virtual memory stats). It provides information about CPU utilization, including user, system, idle, and wait times, which can be used to calculate CPU usage percentages.
+- `vmstat 1 3` shows the stats every 1 second, 3 times. See for yourself if the last row here is better than `vmstat` output.
+  - the first provides usage statistics over a brief period of time, allowing you to see how usage changes over time.
+  - the second displays average usage statistics since the last reboot.
 - Select the last row with `tail -1`.
 - Then select the columns representing the idle time (check the man)
-      - The idle time represents the percentage of time the CPU is not actively executing any tasks. It includes the time when the CPU is idle and waiting for work to do.
-      - usage % = 100% - idle %
+  - The idle time represents the percentage of time the CPU is not actively executing any tasks. It includes the time when the CPU is idle and waiting for work to do.
+  - usage % = 100% - idle %
 - Code:
-      - `vmstat 1 1 | tail -n1 | awk '{print 100 - $15 "%"}'`, the 15th column typically corresponds to the idle CPU time
-      - `mpstat 1 1 | tail -n1 | awk '{print 100 - $NF "%"}'`, $NF refers to the last column, which typically corresponds to the idle CPU time.
+  - `vmstat 1 1 | tail -n1 | awk '{print 100 - $15 "%"}'`, the 15th column typically corresponds to the idle CPU time
+
 🔘 Option 3:
-- `top -bn1 | grep "Cpu(s)" | awk '{print 100 - $8"%"}'` - this runs top in batch mode (-b) for one iteration (-n1), then filters the output to extract the CPU usage percentage.
+- `top -bn1 | grep "Cpu(s)"` - this runs top in batch mode (-b) for one iteration (-n1), then filters the output to extract the CPU usage percentage. To select the idle time you need a regular expression (awk is not enough beacuse when idel time is 100 the words are together and the number of columns change...)
+- 
 ##### 🔸 7. Date and time of last system boot
 See `who -b`. Format: YYYY-MM-DD HH:mm
 ##### 🔸 8. Whether LVM is active or not
 We want to print "yes" or "no" based on the LVM status.
 Regarding LVM (Logical Volume Management), lsblk typically displays information about LVM volumes and their associated devices.
 If LVM (Logical Volume Management) is not active or configured on the system, the lsblk command will only display information about physical disks and their partitions.
+
 See `lsblk` (option `-o`?), it will show lvm info if it is active.
 ```
 lvm_val=$(...)
 lvm_active=$(if [ $lvm_val -gt 0 ]; then echo yes; else echo no; fi)
 ```
 ##### 🔸 9. Number of active connections
-Let's count TCP connections.
-See `ss -ta` or the file `/proc/net/sockstat`
+Let's count TCP connections. We want stablished connections.
+See `ss -ta` or the file `/proc/net/sockstat` (this one shows the same value plus 1 listening)
 ##### 🔸 10. Number of users in the server
-See `users` or `who`
-##### 🔸 11. IPv4 address and MAC (Media Access Control) of your server
-For IP address: see `hostname -I`.
+See `users` or `who`.
+- `who` shows you local users (tty) and remote users (pts).
 
-For MAC address: see `ip link `.
+
+##### 🔸 11. IPv4 address and MAC (Media Access Control) of your server
+Format "IP <ip> (<mac>)
+- "For IP address: see `hostname -I`.
+- For MAC address: see `ip link `, look for the ethernet addreess
+
 ##### 🔸 12. Number of commands executed as sudo
-Remember the log? what was the name of the file?
+Remember the log? what was the name of the file? Look for the lines with "COMMAND" and count them.
+
 `SUDO_LOG=$(grep COMMAND /var/log/sudo/sudo.log | wc -l)`
 
 #### 🟦 4. Make it work every 10 mins in all terminals
 1. All terminals
-The `wall` command allows us to broadcast a message to all users in all terminals. This can be incorporated into the `monitoring.sh` script or added later in `cron`.
-(If wall is not in the script we can use `bash /root/monitoring.sh | wall` as the command to schedule with `cron`.)
+The `wall` command allows us to broadcast a message to all users in all terminals. This can be incorporated into the `monitoring.sh` script or added later in `cron`, as explained above.
 
 2. Schedule
 > 🌳
@@ -201,7 +208,9 @@ The `wall` command allows us to broadcast a message to all users in all terminal
 
 To schedule the execution of the script every 10 minutes:
 - Edit the the root's crontab file with `sudo crontab -u root -e`.
-- Add a new rule at end of the file: `*/10 * * * * /usr/local/bin/monitoring.sh` (`*/10` for "every" 10 minutes)
+- Add a new rule at end of the file: `*/10 * * * * /usr/local/bin/monitoring.sh` (`*/10` for "every" 10 minutes).
+  - Or `bash /root/monitoring.sh | wall` as the command, if wall is not in the script.
 
-- (check cron service `sudo systemctl status cron.service`)
-- (enable cron?? `# systemctl enable cron`)
+- You can check the cron service `sudo systemctl status cron.service`
+- Wait some minutes and see it work.
+- It shouldn't be necessary but you can enable cron with `# systemctl enable cron` (this makes the cron enable when starting you machine, but it should be already).
