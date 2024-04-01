@@ -23,11 +23,12 @@ We want a functional WordPress site with Lighttpd, MariaDB and PHP.
 > - A **web browser** to access and interact with your WordPress site (we'll use a host browser)
 
 ##### 🔸 Web server: Lighttpd
-- Install it `sudo apt install`.
+- Install it `sudo apt install lighttpd`.
 - Allow connection on port 80 `sudo ufw allow 80`. (use `sudo ufw status` to check)
-- Forward the port
+  - The default configuration for Lighttpd is located in `/etc/lighttpd/lighttpd.conf`. We can change the port saving `server.port = 8080` in the file.
+- Forward the port 80
   - go to VM >> `Settings` >> `Network` >> `Adapter 1` >> `Advanced` >> `Port Forwarding` and add the port.
-  - Type `http://127.0.0.1:8080` or `http://localhost:8080` in your host browser. You should see a Lighttpd "placeholder page".
+  - Type `http://127.0.0.1:80` or `http://localhost:80` in your host browser. You should see a Lighttpd "placeholder page".
 
 > 🌳
 > 
@@ -43,7 +44,7 @@ We want a functional WordPress site with Lighttpd, MariaDB and PHP.
 - Change directory `cd /var/www` to install WP here.
 - Get the download link for the latest version of WP at [wordpress.org/download](https://wordpress.org/download/), choose zip format.
 - Download WP with wget, unzip the package and rename paths.
-- give `html` permissions: 755 (rwx for owner user, r-x for group and others)
+- We already have an `html` directory, let's replace it with `wordpress`: rename them and give `html` 755 permissions (rwx for owner user, r-x for group and others)
 ```
 $ sudo apt install wget zip
 $ cd /var/www
@@ -78,16 +79,17 @@ $ sudo mysql_secure_installation
 >
 > `mysql_secure_installation`
 > - It is a script provided with MySQL and MariaDB that helps to secure the installation by performing various security-related tasks. The configuration includes:
->   - It asks whether we want to use `unix_socket` authentication. Instead of relying on a username and password combination, this method leverages the operating system's user authentication mechanism, specifically Unix sockets. >> No
+>   - Asked for current password for root? Press enter
+>   - Switch to `unix_socket` authentication? Instead of relying on a username and password combination, this method leverages the operating system's user authentication mechanism, specifically Unix sockets. >> No
 >     - It would check if the provided username corresponds to a valid system user on the operating system where the server is running.
 >     - Unix_socket authentication is specific to Unix-like operating systems (such as Linux).
 >     - Additionally, it only applies when the client and server are both on the same host, as it relies on local Unix sockets for communication.
 >     - a socket is a combination of an IP address and a port number that uniquely identifies a communication channel between two processes.
 >   - If there is no root password set, the script will prompt you to set a password for the root user >> No (no password) or Yes (and provide the password). Saying No is OK.
->   - It lets you remove anonymous users, which would connect without providing any credentials. >> Yes
->   - It lets you disallow remote login for the root user, adding a layer of security >> Yes
->   - It lets you remove test databases >> Yes
->   - At last it asks to reload privilege tables to make the changes take effect immediately >> Yes
+>   - Remove anonymous users? Yes, this users can connect without providing any credentials. >> Yes
+>   - Disallow remote login for the root user? this adds a layer of security >> Yes
+>   - Remove test databases? >> Yes
+>   - At last, reload privilege tables? it makes the changes take effect immediately >> Yes
 
 ```
 Switch to unix_socket authentication? → N
@@ -100,20 +102,23 @@ Reaload privilege tables now? → Y
 - Once MariaDB is installed, create both a DB and a user for WordPress to use.
   - Let's enter "mariadb mode".
   - The DB can be named as you wish.
-  - Create the user (the below instruction creates a user with the username 'login' who can connect only from localhost and has the password '12345')
+  - Create a user user with your login (the below instruction creates a user with the username 'login' to connect from localhost, and has the password 'password')
   - Grant the user privileges (all) for the new DB.
   - Use "flush" to refresh the privileges and get last changes.
 ```
-$ mariadb
+$ sudo mariadb
 mdb > CREATE DATABASE my_wp_database;
 mdb > SHOW DATABASES;
-mdb > CREATE USER 'login'@'localhost' IDENTIFIED BY '12345';
-mdb > GRANT ALL PRIVILEGES ON wp_database.* TO 'gemartin'@'localhost';
+mdb > CREATE USER 'login'@'localhost' IDENTIFIED BY 'password';
+mdb > GRANT ALL PRIVILEGES ON my_wp_database.* TO 'login'@'localhost';
 mdb > FLUSH PRIVILEGES;
 mdb > exit
 $
 ```
 ##### 🔸 PHP
+- Install what is necessary to execute PHP web applications and to allow them to communicate with databases.
+  - `sudo apt install php-cgi php-mysql`.
+
 > 🌳
 >
 > PHP is a server-side scripting language widely used for web development, and a PHP runtime provides the necessary infrastructure for interpreting and executing PHP code.
@@ -129,8 +134,7 @@ $
 >   - It is a PHP extension, adding MySQL-specific functionality to PHP.
 >   - It provides functions and features for PHP to connect to a MySQL database, execute queries, and manage data.
 
-- Install what is necessary to execute PHP web applications and to allow them to communicate with databases.
-  - `sudo apt install php-cgi php-mysql`.
+
 
 ##### 🔸 WordPress configuration
 WordPress settings are configured with the file `wp-config.php`.
@@ -140,13 +144,13 @@ WordPress settings are configured with the file `wp-config.php`.
 
 ```shell
 $ cd /var/www/html
-$ cp wp-config-sample.php wp-config.php
+$ sudo cp wp-config-sample.php wp-config.php
 $ sudo nano wp-config.php
 ```
-- Edit the following with the MariaDB database and user we created.
-  - DB_NAME: `'my_wp_database'`
-  - BD_user: `'login'`
-  - DB_password: `'12345'`
+  - Edit the following with the MariaDB database and user we created.
+    - DB_NAME: `'my_wp_database'`
+    - BD_user: `'login'`
+    - DB_password: `'12345'`
 - Enable the FastCGI module in the Lighttpd web server to improve the performance of PHP scripts. FastCGI is a protocol for interfacing web servers with external programs.
   - `sudo lighty-enable-mod fastcgi`
 - Enable FastCGI support specifically for PHP scripts.
@@ -154,14 +158,14 @@ $ sudo nano wp-config.php
 - Save changes with `sudo service lighttpd force-reload`.
 - To finish the WordPress installation, go to the host browser and type `localhost` (it will enter [localhost/wp-admin/install.php](localhost/wp-admin/install.php) and fill the form.
   - Site title
-  - user name (a new user for wordpress?)
+  - user name `wp-login` (a new user for wordpress - remember it and its password)
   - password
   - email (42 email)
-- Select `Installl WordPress` and we are done!
+- Select `Installl WordPress` and we are done! ✨
 
 
-- Access `localhost` again and we'll see a working WP site. OR `http://127.0.0.1:8080`
-- To make changes access the admin panel at `localhost/wp-admin` and login.
+- Access `localhost` again and we'll see a working WP site. OR `http://127.0.0.1:80`
+- To make changes access the admin panel at `[localhost/wp-login](http://localhost/wp-admin/)`.
 
 
 ## II. A useful service of your choice
