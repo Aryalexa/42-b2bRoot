@@ -34,6 +34,7 @@ We want a functional WordPress site with Lighttpd, MariaDB and PHP.
 > 
 > Lighttpd
 > - It is an open-source web server designed for speed, efficiency, and flexibility.
+> - It's desgned to be lightweight and efficient, making it well-suited for environments where resource usage is a concern.
 > - It uses an event-driven architecture, making it suitable for handling many simultaneous connections with low resource usage
 > - It supports URL rewriting, allowing administrators to configure clean and user-friendly URLs.
 > - Its design is modular, allowing administrators to enable or disable specific modules based on their requirements.
@@ -173,9 +174,10 @@ $ sudo nano wp-config.php
 > We can't choose NGINX or Apache2. What are NGINX and Apache2?
 > 
 > open-source web servers.
-> - Apache has been a dominant player in the web server space for a long time and is well-suited for a wide range of scenarios.
+> - Both with Lightpd are all web servers commonly used to serve web content and handle HTTPP requests.
+> - **Apache** has been a dominant player in the web server space for a long time and is well-suited for a wide range of scenarios.
 > - Apache supports a variety of features, including the ability to serve static and dynamic content, handle virtual hosts, and provide support for various modules and extensions
-> - Nginx is a high-performance, open-source web server and reverse proxy server.
+> - **Nginx** is a high-performance, open-source web server and reverse proxy server.
 > - Nginx is designed to be lightweight, scalable, and efficient, making it particularly suitable for serving static content and handling a large number of concurrent connections.
 >
 
@@ -192,11 +194,11 @@ We can choose whatever we want...
 - A Personal Cloud (Nextcloud or ownCloud)
 - A Game Server (Minecraft, Factorio, etc.)
 
-I'm going to explain how to do a file server (with vsftpd - easy), a VPN server (with OpenVPN - not as easy) and a version control server (with git - easy).
+I'm going to explain how to do a file server (with vsftpd - easy), a VPN server (with OpenVPN - not as easy) and a version control server (with git - easy, RECOMMENDED).
 
 #### 🔹 vsftpd (File Server)
 VSFTPD (Very Secure FTP Daemon) is a file server.
-- A file server is dedicated to storing, managing and sharing files and data across a network. t provides centralized storage and access to files and directories for client computers and users within an organization or network.
+- A file server is dedicated to storing, managing and sharing files and data across a network. It provides centralized storage and access to files and directories for client computers and users within an organization or network.
 
 1. Install vsftpd
   ```bash
@@ -240,67 +242,84 @@ sudo apt install git
 ```
 2. Create a Git user "git".
 - It's a good practice to create a dedicated user for Git operations.
-- Use this user in the VM from now on (for this configuration).
+- Use this user in the VM from now on (for this configuration). It's better to not give sudo grants to this user. It will have ownership of the central repositories directory and that will be enough.
 ```bash
 sudo adduser git
 ```
 3. Set up SSH access
-- Git typically uses SSH for authentication and secure communication. You'll need to generate an SSH key pair and configure SSH access for your Git user.
+- Git typically uses SSH for authentication and secure communication. You'll need to generate an SSH key pair and configure SSH access.
 
   a. Generate an SSH key pair on our machine (not the VM)
-  - You should generate the SSH key pair on the machine from which you'll be accessing the Git server.
-  - You will generate a SSH key pair (id_rsa and id_rsa.pub) in the ~/.ssh/ directory.
-  ```bash
-  ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
-  ```
+    - Check if you already have a pair already (you must because we are using 42's git server and maybe github too)
+    ```
+    ls ~/.ssh
+    ```
+    - Only if you have no SSH key pair in you Mac: Generate the SSH key pair on the machine from which you'll be accessing the Git server.
+      - it will ask you to give the key a name. Press enter.
+    ```bash
+    ssh-keygen -t rsa
+    ```
+    - You should have a SSH key pair (`id_rsa` and `id_rsa.pub`) in the `~/.ssh` directory.
+  
   
   b. Copy the Public Key to the Git Server.
-  - We want to copy the public key (id_rsa.pub) to the Git user's .ssh directory on the server in the VM (authorized_keys file).
-    - This allows the Git server to authenticate your SSH connections using your private key. You can use `scp` (secure copy protocol) or `ssh-copy-id` (it copies public keys to their appropiate place) commands.
-  - Create the .ssh directory in your VM.
-  ```bash
-  # vm
-  sudo mkdir /home/git/.ssh
-  ```
-  - Copy the public key. Option 1: use `scp` to copy and then concat the key at the end of the authorized_keys file (Use > instead of >> if it's the first time, so the file is created).
-  ```bash
-  # Mac
-  scp ~/.ssh/id_rsa.pub git@localhost:/home/git/.ssh/ -P 4242
-  # vm
-  sudo cat /home/git/id_rsa.pub >> /home/git/.ssh/authorized_keys
-  sudo chown -R git:git /home/git/.ssh
-  ```
-  - Copy the public key. Option 2: `ssh-copy-id` sends the the public key directly to the file authorized_keys. It also changes the permissions of the user's home directory and its content in the server.
-  ```
-  # Mac
-  ssh-copy-id -i ~/.ssh/id_rsa.pub git@localhost -p 4242
-  ```
+    - We want to copy the public key (`vm_id_rsa.pub`) to the Git user's `.ssh` directory on the server in the VM (authorized_keys file).
+      - This allows the Git server to authenticate your SSH connections using your private key.
+      - You can use commands `scp` (secure copy protocol) or `ssh-copy-id` (it copies public keys to their appropiate place, RECOMMENDED).
+    - First, create the `.ssh` directory in your VM in the home directory (`/home/git` or `~`) of the git user
+    ```bash
+    # git@vm
+    mkdir /home/git/.ssh
+    ```
+    - Copy the public key. Option 1: use `scp` to copy and then concat the key at the end of the authorized_keys file (Use > instead of >> if it's the first time, so the file is created).
+    ```bash
+    # Mac
+    scp ~/.ssh/vm_id_rsa.pub git@localhost:/home/git/.ssh/ -P 4242
+    # vm (use a sudo user or root if necessary)
+    sudo cat /home/git/vm_id_rsa.pub >> /home/git/.ssh/authorized_keys
+    sudo chown -R git:git /home/git/.ssh
+    ```
+    - Copy the public key. Option 2: `ssh-copy-id` sends the the public key directly to the file authorized_keys. It also changes the permissions of the user's home directory and its content in the server.
+    ```
+    # Mac
+    ssh-copy-id -i ~/.ssh/vm_id_rsa.pub git@localhost -p 4242
+    ```
+    - Check the public key was added to the authorized keys:
+    ```
+    cat ~/.ssh/authorized_keys
+    ```
   
 4. Set up a Git repository
-  - First, create a directory (`srv/git`) for your Git repositories and initialize a new bare Git repository
-    - The /srv directory is commonly used for site-specific data that is served by the system (/srv/git, /var/git, or /home/git are ok).
+  - First, create a directory (`srv/git`) for your Git repositories, use root (`su -`) or a sudo user (`su - login`) for creating the `/git` directory and then make the git user the owner of it.
+    - The `/srv` directory is commonly used for data that is served by the system (`/srv/git`, `/var/git`, or `/home/git` are usually used).
+  ```
+  # start with git@vm
+  su - login
+  sudo mkdir /srv/git
+  sudo chown git:git /srv/git
+  exit
+  ```
   - Then, initialize a new bare Git repository. This will serve as the central repository for your project.
     - A bare Git repository is a repository that does not have a working directory. It only contains the Git version control metadata (commits, branches, tags, config files).
       - They are used as central repositories in a collaborative development environment.
       - Since they do not have a working directory, they can be safely shared and accessed by multiple users concurrently.
       - They are optimized for use on servers where direct file manipulation is not required. They are commonly used for hosting remote repositories accessed via SSH or other protocols.
   ```
-  # vm
-  sudo mkdir /srv
-  sudo mkdir /srv/git
-  sudo chown git:git /srv/git
+  # git@vm
   cd /srv/git
-  sudo git init --bare myproject.git
+  git init --bare firstrepo.git
   ```
 5. Test the Git server
-- Clone the repository from your local machine.
-- Git supports ssh (`ssh://[user@]host.xz[:port]/path/to/repo.git/`), git, http, and https protocols.
+- Let's clone the repository from your local machine.
+  - Git supports ssh (`ssh://[user@]host.xz[:port]/path/to/repo.git/`), git, http, and https protocols.
+  - But ssh requires you to use the git password every time.
 ```
 # Mac
-git clone ssh://git@localhost:4242/srv/git/myproject.git
+git clone ssh://git@localhost:4242/srv/git/firstrepo.git
 ```
+  - Make some commits and see how it works perfectly. You can clone a second local repo with the same remote to see all was saved.
 
-#### 🔹 OpenVPN (VPN Server) ** ⚠️ Not tested!**
+#### 🔹 OpenVPN (VPN Server) **⚠️ Not tested!**
 A VPN (Virtual Private Network) is a technology that enables secure and private communication over a public network, typically the internet.
 - It creates a private network connection between a user's device (such as a computer, smartphone, or tablet) and a VPN server, encrypting all data transmitted between the two endpoints.
   - Example: VPNs create a secure tunnel between the user's device and a corporate network, allowing remote employees or travelers to access network resources securely over the internet.
