@@ -1,12 +1,14 @@
 
 ## Good to know - prepare for evaluation
 
-> 🌳
+🌳 🌳 🌳
 
 ### 🟧 *Package Management tools*
 - `apt` is a command-line package management tool that simplifies the process of installing, updating, and removing packages. It is a high-level interface to the underlying Advanced Package Tool (APT) libraries.
 - `apt-get` has a more traditional and verbose command-line interface. It was the original package management tool on Debian-based systems and is known for its extensive set of options. It and `apt` share the same underlying package management libraries. It is still widely used and supported, especially in scripts and automation. Use the `-y` option for automatic `yes`.
 - `aptitude` is also a command-line package management tool, but it provides a more interactive and text-based interface compared to `apt`. It is designed to be more user-friendly and includes additional features beyond package management.
+
+> `apt` offers a command-line interface, while `aptitude` offers a visual interface
 
 
 
@@ -19,9 +21,11 @@ $ sudo reboot
 ```
 
 ### 🟧 What is AppArmor?
-- AppArmor (Application Armor) is a Linux security module that provides Mandatory Access Control (MAC) by confining programs to a limited set of resources and actions.
+- AppArmor (Application Armor) is a Linux kernel security module
+  - it provides Mandatory Access Control (MAC) by confining programs to a limited set of resources and actions.
 - why: to restrict the capabilities of individual programs to minimize the potential damage they can cause if compromised.
 - MAC works based on policies set by the system administrator or security policies defined by the organization (the organization's security team or IT administrators). Unlike discretionary access control (DAC), where users have control over their own objects, MAC is enforced by the operating system and restricts users' ability to change access controls.
+- AppArmor is an effective and easy-to-use Linux application security system. AppArmor proactively protects the operating system and applications from external or internal threats, even zero-day attacks, by enforcing good behavior and preventing both known and unknown application flaws from being exploited.
 - AppArmor is commonly used on Ubuntu and other Debian-based distributions, while SELinux is often found on Red Hat and CentOS systems.
 
 ### 🟧 Check installed packages
