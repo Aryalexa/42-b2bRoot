@@ -1,7 +1,7 @@
 ### 6. Bonus
 Parts
-- [Wordpress web service](https://github.com/Aryalexa/42-b2bRoot/edit/main/6-Bonus.md#i-wordpress-and-services)
-- [A useful service of your choice](https://github.com/Aryalexa/42-b2bRoot/edit/main/6-Bonus.md#ii-a-useful-service-of-your-choice)
+- [Wordpress web service](https://github.com/Aryalexa/42-b2bRoot/blob/main/6-Bonus.md#i-wordpress-and-services)
+- [A useful service of your choice](https://github.com/Aryalexa/42-b2bRoot/blob/main/6-Bonus.md#ii-a-useful-service-of-your-choice)
 
 
 ## I. WordPress and services
