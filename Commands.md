@@ -22,14 +22,14 @@ command `cat /etc/group`
 command `cut -d: -f1 /etc/passwd`
 - see all local users
   
-command `/usr/sbin/aa-status` (for debian)  
+command `sudo /usr/sbin/aa-status` (for debian)  
 - says if `apparmor` module is loaded  
   
 command `ss -tunlp` (for debian)  
 - data: netid, state, recv-q, sen-q, local address:port, peer address:port, users  
 - ex: tcp, listen, 0, 128, 0.0.0.0:4242, 0.0.0.0:\*, users:(("sshd", pid=523,fd=3))  
   
-command `/usr/sbin/ufw status` (for debian)  
+command `sudo /usr/sbin/ufw status` or `sudo ufw status` (for debian)  
 - UFW firewall status data: active or not  
 - more data: to, action, from  
 - ex: 4242, allow, anywhere
