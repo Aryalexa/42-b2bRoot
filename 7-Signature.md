@@ -1,12 +1,26 @@
 ### 7. Signature
 
 Once the VM is configured as you like, you have to submit a file `signature.txt` with the VM signature as its only content. Good moment to save the VM current state and turn it off. Don't forget to do a backup, just in case.
+- create snapshot (name "snapshos 1")
+- power off + return to snaphot 1
+- generate signature
+
+From now on, each time you start the VM it will be in "snapshot 1" state. Make sure to "power off + return to snapshot 1" *every time*.
+
+> ☢️
+> 
+> Every change on your VM alters its signature. You must always have a VM that matches the signature of your final (and submitted) VM until all evaluations are finished.
+> Be careful, as evaluations may alter its signature, please duplicate your VM or use "save state"/"snapshot".
+
+
+#### Generate signature
 
 You can find your virtual disk signature on the installation default path for your VMs.
 - Windows: `%HOMEDRIVE%%HOMEPATH%\VirtualBox VMs\`
 - Linux: `~/VirtualBox VMs/`
 - MacM1: `~/Library/Containers/com.utmapp.UTM/Data/Documents/`
 - MacOS: `~/VirtualBox VMs/`
+- Or where you created it: `/sgoinfre/students/login`.
 
 There you will see the `.vdi` file (or `.qcow2` for UTM users - MacM1).
 
@@ -16,10 +30,9 @@ Get its signature on SHA-1 format:
 - MacM1: `shasum UTM_FILE.utm/Images/disk-0.qcow2`
 - MacOS: `shasum VDI_FILE.vdi`
 
-> ☢️
-> 
-> Every change on your VM alters its signature. You must always have a VM that matches the signature of your final (and submitted) VM until all evaluations are finished.
-> Be careful, as evaluations may alter its signature, please duplicate your VM or use "save state". 
+```
+shasum VDI_FILE.vdi > signature.txt
+```
 
 > 🌳
 > 
