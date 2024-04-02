@@ -40,20 +40,10 @@ Several ways, sudo package example:
 # apt list --installed | grep sudo
 ```
 ### 🟧 Cron
+We have to know how to stop cron jobs.
 
-First of all, learn to identify the cron job process.
-
-You can see all cron jobs within the cron table with `crontab` (-e option to edit it, -u user option to specify the owner of the cron table).
-
-To dentify the process ID (PID) of the cron job here you have 2 ways:
-```
-$ pgrep -f "your_cron_command_or_script"
-$ ps aux | grep "your_cron_command_or_script"
-```
-
-Now we want to learn how to stop them...
-
-❌ Cron stop and start
+✅ Cron stop and start.
+This stops and restarts the deamon, i.e. *all* cron jobs.
 ```
 $ sudo /etc/init.d/cron stop
 $ sudo /etc/init.d/cron start
@@ -68,7 +58,7 @@ $ sudo /etc/init.d/cron start
 - (comment the line and try searching for the process to check if it is still running)
 
 ✅ For a specific job you want to stop:
-- Identify the process ID (PID) of the cron job. 
+- Identify the process ID (PID) of the cron job.
 - Terminate/kill the process using the PID: `sudo kill <PID>` (-9 option to force)
 - Job interrupted!
 - To make the cron job run again
@@ -85,8 +75,8 @@ OpenSSH client and server
 - OpenSSH client: it is the program you use to connect from your machine to other machines using SSH.
 - OpenSSH daemon (`sshd`): it is the server-side component of OpenSSH, that handles incoming SSH connections.
 
-## Good to know - but maybe too much
 
+## Good to know - but maybe too much
 
 ### 🟨 Network Addresses
 1. IP Address:
