@@ -50,7 +50,7 @@ Open VirtualBox and create a **new** VM.
 
 Give the VM a **name**, a **location**, a type and a version.
 - name: `Born2beroot`, for example
-- location: inside your `sgoinfre` folder`sgoinfre/42login/vmdirname`
+- location: inside your `sgoinfre` folder`sgoinfre/42login/`
 - type: linux
 - version: Debian
 
@@ -65,8 +65,8 @@ Reserve some **RAM** memory for the VM. 1024 MB is good.
 Create a virtual **Hard disk** *now*.
 - type: VDI (Virtual Disk Image)
 - storage: select `dynamically allocated` so the allocation is done as is used until reaching the limit
-- location: give the vdi a location `42login/vmdirname/Born2beroot/Born2beroot.vdi`
-- size: `12GB` as recommended or `30GB` if we are doing the ✨bonus✨ (the manual partitioning needs 30GB, but `sgoinfre` allow 15GB max, so.. idk, I've read slack conversations saying to use less as the subject says "similar").
+- location: give the vdi a location `42login/<...>/Born2beroot/Born2beroot.vdi`
+- size: `12GB` as recommended  (the ✨bonus✨ partitioning picture says 30GB, but `sgoinfre` allow 15GB max, so.. 12 GB it is and it's enough).
 ```
 🔹General
 name: Born2beroot
