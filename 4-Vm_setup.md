@@ -1,4 +1,4 @@
-### 4. Set up
+## 4. Set up
 
 We're going to set up some tools, sevices and configurations in our Debian VM.
 
@@ -12,7 +12,7 @@ What we want:
 
 So we need some system changes to add and configure all this, we need some elevated privileges. Safer than using the root account, the `sudo` command is used for these tasks. 
 
-#### 🟪 `sudo` installation
+### 🟪 `sudo` installation
 
 > 🌳 
 > 
@@ -46,7 +46,7 @@ $ su -
 >
 
 
-#### 🟪 users and groups management
+### 🟪 users and groups management
 
 Unix-like systems support multiple users. Each user has their own home directory, their own files, and their own permissions.
 We want:
@@ -88,7 +88,7 @@ $ getent group sudo
 $ getent group user42
 ```
 
-#### 🟪 `sudo` configuration
+### 🟪 `sudo` configuration
 
 Let's change some `sudo` configurations. We are going to use the `visudo` command (that let's you edit sintax-wise safely the sudo config file `/etc/sudoers` using a tmp file).
 - Access to edit the sudo config file with the command `sudo visudo`
@@ -127,7 +127,7 @@ Defaults  secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/
 >  
 
 
-#### 🟪 Tools installation
+### 🟪 Tools installation
 You can install what you see necessary. This is optional.
 
 > if using `apt-get`, update and upgrade before just in case: `apt-get update -y`, `apt-get upgrade -y`
@@ -136,7 +136,7 @@ You can install what you see necessary. This is optional.
 - vim: `sudo apt-get install vim` or `sudo apt install vim` to edit files. Nano is installed by default in Debian.
 
 
-#### 🟪 SSH configuration
+### 🟪 SSH configuration
 - Let's install and configure a SSH service.
 
 > 🌳 
@@ -163,7 +163,7 @@ You can install what you see necessary. This is optional.
  		- The SSH port the connection goes out from should be `4242`: `#Port 22` to `Port 4242`.
 - Restart the service `sudo service ssh restart` and check status `sudo service ssh status`. We must see that the server is active and listening through port 4242.
 
-#### 🟪 UFW Firewall configuration
+### 🟪 UFW Firewall configuration
 > 🌳
 > Firewall
 > - It is a network security software (or device) that monitors, filters and controls incoming and outgoing network traffic.
@@ -205,7 +205,7 @@ Now lets add/change some rules: `sudo ufw allow 4242` in order to allow 4242 for
 >   ```
 >   Careful with the numbered method, the index numbers change after a deletion, check between deletes to get the correct index number!
 
-#### 🟪 Test SSH communication with your VM
+### 🟪 Test SSH communication with your VM
 
 We have installed SSH in our VM to make it accesible remotely. So let's login to our VM from our machine. The SSH server in the VM needs a port for when someone connects from outside. So the VM need a port, but because this is a virtual machine (guest), it needs to use our machine (host) ports. We make a port available for the VM by redirecting ports using "port forwarding" in our virtualization software (Virtual Box).
 Let's forward the host port 4242 to the guest port 4242, so that connections to port 4242 on the host will be directed to port 4242 on the virtual machine.
@@ -241,9 +241,10 @@ $ ssh <username>@127.0.0.1 -p <target_port>
 ```
 --> `ssh user@localhost -p 4242` from our machine
 
-#### 🟪 Password policy
+### 🟪 Password policy
 Two steps to fulfill the subject:
-1. 🔹 Change password and accounts aging settings 🔹
+#### 1. 🔹 Change password and accounts aging settings 🔹
+
 We do this by editing the `/etc/login.defs` file, don't forget to use sudo.
 Look for `password aging controls` in the file, let's modify the file so all new users get this configuration. 
 - `PASS_MAX_DAYS 30`: passwords expire after 30 days
@@ -256,7 +257,8 @@ $ sudo chage -M 30 <username/root>
 $ sudo chage -m 2 <username/root>
 $ sudo chage -W 7 <username/root>
 ```
-2. 🔹 Change passwords requirements 🔹
+#### 2. 🔹 Change passwords requirements 🔹
+
 Install Password Quality Checking Library and edit its settings.
 ```
 $ sudo apt install libpam-pwquality
@@ -267,12 +269,13 @@ Change the line `password  requisite     pam_pwquality.so` to
 password  requisite     pam_pwquality.so  retry=3 minlen=10 ucredit=-1 lcredit=-1 dcredit=-1 maxrepeat=3 reject_username difok=7 enforce_for_root
 ```
 so the passwords..
-  	- gives you three retries before error (`retry=3`)
-	- consists of minimum 10 characters (`minlen=10`)
-	- must contain a capital letter, a lower letter and a number (`ucredit=-1 lcredit=-1 dcredit=-1` for uppercase, lowercase and digits, `-` for minimum and `+` for maximum)
-	- cannot have the same character consecutively repeated more than 3 times (`maxrepeat=3`)
-	- cannot contain the user name (`reject_username`)
-	- must contain at least 7 new characters not included in the old password (`difok=7`). This rule does not apply for the root password.
- 	- The policy applies to root (`enforce_for_root`)
+- gives you three retries before error (`retry=3`)
+- consists of minimum 10 characters (`minlen=10`)
+- must contain a capital letter, a lower letter and a number (`ucredit=-1 lcredit=-1 dcredit=-1` for uppercase, lowercase and digits, `-` for minimum and `+` for maximum)
+- cannot have the same character consecutively repeated more than 3 times (`maxrepeat=3`)
+- cannot contain the user name (`reject_username`)
+- must contain at least 7 new characters not included in the old password (`difok=7`). This rule does not apply for the root password.
+- The policy applies to root (`enforce_for_root`)
+  - "Note that root is not asked for an old password so the checks that compare the old and new password are not performed." [enforce_for_root doc](https://man.archlinux.org/man/pam_pwquality.8#enforce_for_root)
 
 ✨ Use `sudo passwd <username>` to change your password and make it comply with the new policy (for root and your user).
