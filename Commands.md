@@ -36,3 +36,7 @@ command `sudo /usr/sbin/ufw status` or `sudo ufw status` (for debian)
 
 command `dpkg -s <pkgname>`
 - check if package is installed
+
+see envronment variable DISPLAY: `echo $DISPLAY`
+- If you are not using a graphical environment (i.e. you are logging in on the system console with no windows etc; or you are logging in remotely from a text-only terminal over SSH or similar, such as from a Windows computer running PuTTY) then no GUI is involved, and DISPLAY will typically be unset. Your only means of communicating with the computer is the command line (though there may be ways to pivot into a GUI session if you know how).
+- If you are logging in on the console with a graphical interface (on Ubuntu, typically the GDM greeter is used) or using a graphical terminal (such as from a Windows computer running eXceed or mobaX, or remote desktop software like a VNC client) the DISPLAY variable is set up by the program which manages your graphical session to indicate to graphical clients which I/O devices to connect to.
