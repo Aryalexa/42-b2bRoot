@@ -312,7 +312,7 @@ sudo adduser git
 5. Test the Git server
 - Let's clone the repository from your local machine.
   - Git supports ssh (`ssh://[user@]host.xz[:port]/path/to/repo.git/`), git, http, and https protocols.
-  - But ssh requires you to use the git password every time.
+  - But ssh requires you to use the git password every time, if your user public key is not in the server.
 ```
 # Mac
 git clone ssh://git@localhost:4242/srv/git/firstrepo.git
