@@ -4,12 +4,14 @@
 🌳 🌳 🌳
 
 ### 🟧 *Package Management tools*
-- `apt` is a command-line package management tool that simplifies the process of installing, updating, and removing packages. It is a high-level interface to the underlying Advanced Package Tool (APT) libraries.
+From older to newer
 - `apt-get` has a more traditional and verbose command-line interface. It was the original package management tool on Debian-based systems and is known for its extensive set of options. It and `apt` share the same underlying package management libraries. It is still widely used and supported, especially in scripts and automation. Use the `-y` option for automatic `yes`.
+- `apt` is a command-line package management tool that simplifies the process of installing, updating, and removing packages. It is a high-level interface to the underlying Advanced Package Tool (APT) libraries.
 - `aptitude` is also a command-line package management tool, but it provides a more interactive and text-based interface compared to `apt`. It is designed to be more user-friendly and includes additional features beyond package management.
 
-> `apt` offers a command-line interface, while `aptitude` offers a visual interface
+> `apt` offers a command-line interface, while `aptitude` offers a visual interface and more options.
 
+> 💡 Always run `sudo apt update` before installing new packages to avoid issues. However, you don’t always need to `run apt upgrade` unless you want to update your entire system. 🚀
 
 
 ### 🟧 Change the VM hostname
