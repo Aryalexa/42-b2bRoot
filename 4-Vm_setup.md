@@ -115,7 +115,7 @@ Defaults  secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/
 > 
 > *`visudo` command* 
 > - Running the command will open the `/etc/sudoers` file in the system's default text editor, allowing you to make and save changes to the sudo configuration.
-> - Is is used to edit the file while ensuring no syntax errors.
+> - It is used to edit the file while ensuring no syntax errors.
 > 
 > *the `/etc/sudoers` file*
 > - The file determines which users or groups are granted sudo privileges and what commands they are allowed to run with elevated privileges.
@@ -130,10 +130,12 @@ Defaults  secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/
 ### 🟪 Tools installation
 You can install what you see necessary. This is optional.
 
-> if using `apt-get`, update and upgrade before just in case: `apt-get update -y`, `apt-get upgrade -y`
-> if using `apt`, the same: `apt update`, `apt upgrade`
-
 - vim: `sudo apt-get install vim` or `sudo apt install vim` to edit files. Nano is installed by default in Debian.
+
+> 💡 Always run `sudo apt update` before installing new packages to avoid issues. However, you don’t always need to `run apt upgrade` unless you want to update your entire system.
+> 
+> Same for `apt-get`.
+
 
 
 ### 🟪 SSH configuration
